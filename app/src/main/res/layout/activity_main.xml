@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.jacob.bluetoothtest.MainActivity">
+
+    <Button
+        android:id="@+id/SendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/SaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SendButton" />
+
+    <Button
+        android:id="@+id/LoadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/files"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SaveButton" />
+
+    <Button
+        android:id="@+id/ClearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="New"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LoadButton" />
+
+    <TextView
+        android:id="@+id/ActivityMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="@string/editing_new_scouting_log"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ScrollView" />
+
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="613dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:descendantFocusability="beforeDescendants"
+        app:layout_constraintBottom_toTopOf="@+id/ActivityMessage"
+        app:layout_constraintEnd_toStartOf="@+id/SaveButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/TextFields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/TeamNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Team Number"
+                android:inputType="number"
+                android:tag="@string/text"
+                app:layout_constraintEnd_toStartOf="@+id/SendButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/MatchNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:ems="10"
+                android:hint="Match Number"
+                android:inputType="number"
+                android:tag="@string/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TeamNumber" />
+
+            <EditText
+                android:id="@+id/ScoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:ems="10"
+                android:hint="Scout Name"
+                android:inputType="text"
+                android:tag="@string/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/MatchNumber" />
+
+            <ToggleButton
+                android:id="@+id/GoodConnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:checked="true"
+                android:tag="@string/bool"
+                android:text="ToggleButton"
+                android:textOff="Bad Connection"
+                android:textOn="Good Connection" />
+
+            <RadioGroup
+                android:id="@+id/StartingLevel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:checkedButton="@+id/Ground"
+                android:tag="@string/radio">
+
+                <TextView
+                    android:id="@+id/LevelTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Starting Level"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Ground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ground"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Platform"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Platform"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/SandstormHatchesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Sandstorm - Number Of Hatches"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/SandstormHatches"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/HatchesNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Hatches"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddSandstormHatch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/SandstormCargosTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text=" Sandstorm - Number Of Cargos"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/SandstormCargos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/CargosNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Cargos"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddSandstormCargo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/RocketHatchesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Rocket Ship Hatches"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/RocketHatches"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/RocketHatchesNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Hatches"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddRocketHatch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/RocketCargosTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Rocket Ship Cargos"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/RocketCargos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/RocketCargosNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Cargos"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddRocketCargo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+
+                android:id="@+id/CargoHatchesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Cargo Ship Hatches"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/CargoHatches"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/CargoHatchesNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Hatches"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddCargoHatch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/CargoCargosTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Cargo Ship Cargos"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/CargoCargos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/CargoCargosNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Cargos"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddCargoCargo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/HatchesDroppedTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Hatches Dropped"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/HatchesDropped"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/HatchesDroppedNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Hatches Dropped"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddHatchDropped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/CargoDroppedTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:tag="@string/title"
+                android:text="Cargo Dropped"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/CargoDropped"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:orientation="horizontal"
+                android:tag="@string/addable">
+
+                <EditText
+                    android:id="@+id/CargoDroppedNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Cargo Dropped"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/AddCargoDropped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/PlayedDefense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:checked="true"
+                android:tag="@string/bool"
+                android:text="ToggleButton"
+                android:textOff="No Defense"
+                android:textOn="Played Defense" />
+
+            <RadioGroup
+                android:id="@+id/RateDefense"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:checkedButton="@+id/NotApplicable"
+                android:tag="@string/radio">
+
+                <TextView
+                    android:id="@+id/DefenseTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Defense Rating"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/NotApplicable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="N/A"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/VeryBad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Very Bad"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Bad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bad"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Adequate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Adequate"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Good"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Good"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/VeryGood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Very Good"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/PlatformReached"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:checkedButton="@+id/None"
+                android:tag="@string/radio">
+
+                <TextView
+                    android:id="@+id/PlatformTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Platform Reached"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/None"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="None"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Low"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Low"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Medium"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/High"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="High"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/ClimbTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:ems="10"
+                android:hint="Endgame - Climb Time"
+                android:inputType="number"
+                android:tag="@string/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/StartingLevel" />
+
+            <EditText
+                android:id="@+id/Comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="132dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="30dp"
+                android:ems="10"
+                android:hint="Comments"
+                android:inputType="text"
+                android:tag="@string/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/StartingLevel" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

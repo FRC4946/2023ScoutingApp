@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Alpha Dogs Scouting</string>
+    <string name="app_info">Jacob Klimczak \n Alpha Dogs \n 2018</string>
+    <string name="action_settings">Settings</string>
+    <string name="save">Save</string>
+    <string name="send">Send</string>
+    <string name="team_name">Team Name</string>
+    <string name="team_number">Team Number</string>
+    <string name="drive_train_setup">Drive Train Setup</string>
+    <string name="robot_weight">Robot Weight (lbs)</string>
+    <string name="average_speed">Average Speed (m/s)</string>
+    <string name="todo">TODO</string>
+    <string name="mac_address">MAC Address</string>
+    <string name="connect">Connect</string>
+    <string name="send_saved_files">Send Saved Files</string>
+    <string name="load">Load</string>
+    <string name="save_file">Save File</string>
+    <string name="clear">Clear</string>
+    <string name="editing_new_scouting_log">Editing New Scouting Log</string>
+    <string name="delete">Delete</string>
+    <string name="files">Files</string>
+    <string name="number_of_cims">Number Of CIMS</string>
+    <string name="cube_intake">Cube Intake</string>
+    <string name="cube_output">Cube Output</string>
+    <string name="climber">Climber</string>
+    <string name="number_of_batteries">Number Of Batteries</string>
+    <string name="coding_language">Coding Language</string>
+    <string name="what_they_do_in_auto">What They Do In Auto</string>
+    <string name="text">text</string>
+    <string name="bool">bool</string>
+    <string name="radio">radio</string>
+    <string name="title" >title</string>
+    <string name="addable">addable</string>
+</resources>
