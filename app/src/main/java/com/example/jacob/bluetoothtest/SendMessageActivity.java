@@ -423,7 +423,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
             // Get storage permissions
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MainActivity.WRITE_LOG);
+                    2);
         }
 
     }
@@ -439,7 +439,7 @@ public class SendMessageActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (requestCode == MainActivity.WRITE_LOG) {
+        if (requestCode == 2) {
 
             Log.i("A", "Received response for write permission request.");
 
