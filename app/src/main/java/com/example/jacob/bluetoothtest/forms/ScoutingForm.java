@@ -23,11 +23,10 @@ public class ScoutingForm {
 
     public TimePeriod m_matchPeriod = new TimePeriod();
 
-    public ArrayList<TimePeriod> climbTimes = new ArrayList<TimePeriod>();
+    TimePeriod climbTime = new TimePeriod();
     public ArrayList<TimePeriod> defenceTimes = new ArrayList<TimePeriod>();
     public ArrayList<TimePeriod> activeDefenceTimes = new ArrayList<TimePeriod>();
 
-    public long climbTime = 0;
     public long defenceTime = 0;
     public long activeDefenceTime = 0;
 
@@ -59,7 +58,6 @@ public class ScoutingForm {
     }
 
     public void finalize() {
-        climbTime = getTimeListSum(climbTimes);
         defenceTime = getTimeListSum(defenceTimes);
         activeDefenceTime = getTimeListSum(activeDefenceTimes);
         m_finalized = true;

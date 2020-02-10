@@ -108,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!isShelfOut()) {
-                    Log.i("A", "Clicked Red Trench");
+                    if (m_currentForm.team == Constants.Team.RED) {
+                        showTrenchAlert();
+                    }
                 }
             }
         });
@@ -117,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!isShelfOut()) {
-                    Log.i("A", "Clicked Blue Trench");
+                    if (m_currentForm.team == Constants.Team.BLUE) {
+                        showTrenchAlert();
+                    }
                 }
             }
         });
@@ -248,6 +252,80 @@ public class MainActivity extends AppCompatActivity {
                 m_defenceTypeLayout.setVisibility(View.GONE);
             }
         }
+    }
+
+    void showTrenchAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setCancelable(true);
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.dialog_trench, null);
+
+        //setup
+
+        final ToggleButton stage2Attempted = layout.findViewById(R.id.attemptedStage2);
+        final ToggleButton stage2Succeeded = layout.findViewById(R.id.succeededStage2);
+
+        final ToggleButton stage3Attempted = layout.findViewById(R.id.attemptedStage3);
+        final ToggleButton stage3Succeeded = layout.findViewById(R.id.succeededStage3);
+
+        stage2Attempted.setChecked(m_currentForm.attemptedStage2);
+        stage2Succeeded.setChecked(m_currentForm.successStage2);
+
+        stage2Succeeded.setEnabled(m_currentForm.attemptedStage2);
+
+        stage3Attempted.setChecked(m_currentForm.attemptedStage3);
+        stage3Succeeded.setChecked(m_currentForm.successStage3);
+
+        stage3Succeeded.setEnabled(m_currentForm.attemptedStage3);
+
+        stage2Attempted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (stage2Attempted.isChecked()) {
+                    stage2Succeeded.setEnabled(true);
+                } else {
+                    stage2Succeeded.setEnabled(false);
+                    stage2Succeeded.setChecked(false);
+                }
+            }
+        });
+
+        stage3Attempted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (stage3Attempted.isChecked()) {
+                    stage3Succeeded.setEnabled(true);
+                } else {
+                    stage3Succeeded.setEnabled(false);
+                    stage3Succeeded.setChecked(false);
+                }
+            }
+        });
+
+        builder.setView(layout);
+
+        builder.setPositiveButton(R.string.affirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ToggleButton stage2Attempted = ((AlertDialog) dialogInterface).findViewById(R.id.attemptedStage2);
+                ToggleButton stage2Succeeded = ((AlertDialog) dialogInterface).findViewById(R.id.succeededStage2);
+
+                ToggleButton stage3Attempted = ((AlertDialog) dialogInterface).findViewById(R.id.attemptedStage3);
+                ToggleButton stage3Succeeded = ((AlertDialog) dialogInterface).findViewById(R.id.succeededStage3);
+
+                m_currentForm.attemptedStage2 = stage2Attempted.isChecked();
+                m_currentForm.successStage2 = stage2Succeeded.isChecked();
+
+                m_currentForm.attemptedStage3 = stage3Attempted.isChecked();
+                m_currentForm.successStage3 = stage3Succeeded.isChecked();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     void showSetupAlert() {
