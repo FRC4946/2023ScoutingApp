@@ -31,4 +31,7 @@
     <string name="radio">radio</string>
     <string name="title" >title</string>
     <string name="addable">addable</string>
+    <string name="affirm">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 </resources>

@@ -5,5 +5,8 @@
     <color name="colorAccent">#8e0002</color>
     <color name="accent_material_dark_1">#990000</color>
     <color name="redTeam">#F44336</color>
-    <color name="blueTeam">#3F51B5</color>
+    <color name="blueTeam">#2196F3</color>
+    <color name="greenColor">#4CAF50</color>
+    <color name="shelfColor">#A5A5A5</color>
+    <color name="iconColor">#DADADA</color>
 </resources>

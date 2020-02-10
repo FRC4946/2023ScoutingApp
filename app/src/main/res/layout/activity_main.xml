@@ -7,14 +7,15 @@
     tools:context="com.example.jacob.bluetoothtest.MainActivity">
 
     <LinearLayout
+        android:id="@+id/trenches"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="@id/linearLayout"
-        app:layout_constraintStart_toStartOf="@id/linearLayout"
-        app:layout_constraintTop_toTopOf="@id/linearLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/targets"
+        app:layout_constraintEnd_toEndOf="@id/targets"
+        app:layout_constraintStart_toStartOf="@id/targets"
+        app:layout_constraintTop_toTopOf="@id/targets">
 
         <Button
             android:id="@+id/redTrench"
@@ -39,7 +40,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/targets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="24dp"
@@ -77,4 +78,161 @@
             android:alpha="0" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/modeShelf"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/shelfColor"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/gameMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Auto"
+                android:textColor="@color/blueTeam" />
+
+            <Button
+                android:id="@+id/teleop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Teleop"
+                android:textColor="@color/redTeam" />
+
+            <Button
+                android:id="@+id/endgame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Endgame"
+                android:textColor="@color/greenColor" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/defenceMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/offence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Offence"
+                android:textColor="@color/redTeam" />
+
+            <Button
+                android:id="@+id/defence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Defence"
+                android:textColor="@color/greenColor" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/defenceType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/defending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Defending"
+                android:textColor="@color/greenColor" />
+
+            <Button
+                android:id="@+id/idle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Idle"
+                android:textColor="@color/blueTeam" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/toggleMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Match" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Send" />
+
+            <Button
+                android:id="@+id/newForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="New" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Load" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/teamInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Red - 1"
+            android:textColor="@color/redTeam" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/shelfButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/shelfColor"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@id/targets"
+        app:layout_constraintStart_toEndOf="@id/modeShelf"
+        app:layout_constraintTop_toTopOf="@id/targets"
+        app:layout_constraintVertical_bias="0.23000002"
+        app:srcCompat="@drawable/ic_threelines" />
 </android.support.constraint.ConstraintLayout>
