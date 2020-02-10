@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScoutingForm m_currentForm = new ScoutingForm();
 
-    private Button m_redTrench, m_blueTrench, m_redTarget, m_blueTarget, m_shieldGenerator, m_auto, m_teleop, m_endgame, m_offence, m_defence, m_defending, m_idle, m_new, m_load, m_save, m_send;
+    private Button m_redTrench, m_blueTrench, m_redTarget, m_blueTarget, m_shieldGenerator, m_auto, m_teleop, m_endgame, m_offence, m_defence, m_defending, m_idle, m_new, m_load, m_save, m_send, m_matchToggle;
     private ImageButton m_shelfButton;
     private LinearLayout m_shelfLayout, m_defenceModeLayout, m_defenceTypeLayout;
 
@@ -86,10 +86,29 @@ public class MainActivity extends AppCompatActivity {
 
         m_teamInfo = findViewById(R.id.teamInfo);
 
+        m_matchToggle = findViewById(R.id.toggleMatch);
+
         m_new = findViewById(R.id.newForm);
+        m_save = findViewById(R.id.save);
+        m_load = findViewById(R.id.load);
+        m_send = findViewById(R.id.send);
 
         updateTeamInfo();
         updateShelf();
+
+        m_matchToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (m_currentForm.matchStarted) {
+                    m_currentForm.matchOver = true;
+                    m_matchToggle.setEnabled(false);
+                } else {
+                    m_currentForm.matchStarted = true;
+                    m_currentForm.currentMode = Constants.GameMode.AUTO;
+                }
+                updateShelf();
+            }
+        });
 
         m_new.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +188,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isShelfOut()) {
-                    m_shelfLayout.setVisibility(View.GONE);
+                    if (m_currentForm.matchStarted && !m_currentForm.matchOver) {
+                        m_shelfLayout.setVisibility(View.GONE);
+                    } else if (m_currentForm.matchStarted && m_currentForm.matchOver) {
+                        Utilities.showToast(getBaseContext(), Constants.MATCH_OVER_ERROR, Toast.LENGTH_SHORT);
+                    } else {
+                        Utilities.showToast(getBaseContext(), Constants.START_MATCH_ERROR, Toast.LENGTH_SHORT);
+                    }
                 } else {
                     m_shelfLayout.setVisibility(View.VISIBLE);
                 }
@@ -208,48 +233,78 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateTeamInfo() {
-        m_teamInfo.setText((m_currentForm.scoutName.length() > 20 ? m_currentForm.scoutName.substring(0, 17) + "..." : m_currentForm.scoutName) + " Scouting " + m_currentForm.team + " - " + m_currentForm.driverStation + " For Match " + m_currentForm.matchNumber);
+        m_teamInfo.setText((m_currentForm.scoutName.length() > Constants.SCOUT_NAME_MAX_UI_LENGTH ? m_currentForm.scoutName.substring(0, Constants.SCOUT_NAME_MAX_UI_LENGTH - 3) + "..." : m_currentForm.scoutName) + " Scouting " + m_currentForm.team + " - " + m_currentForm.driverStation + " For Match " + m_currentForm.matchNumber);
         m_teamInfo.setTextColor((m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam)));
     }
 
     void updateShelf() {
-        if (m_currentForm.currentMode == Constants.GameMode.AUTO) {
+        if (m_currentForm.matchStarted && !m_currentForm.matchOver) {
+            m_new.setEnabled(false);
+            m_send.setEnabled(false);
+            m_save.setEnabled(false);
+            m_load.setEnabled(false);
+
+            if (m_currentForm.currentMode == Constants.GameMode.AUTO) {
+                m_auto.setEnabled(false);
+                m_teleop.setEnabled(true);
+                m_endgame.setEnabled(true);
+                m_defenceModeLayout.setVisibility(View.GONE);
+                m_defenceTypeLayout.setVisibility(View.GONE);
+            } else {
+
+                m_auto.setEnabled(true);
+
+                if (m_currentForm.currentMode == Constants.GameMode.TELEOP) {
+                    m_teleop.setEnabled(false);
+                    m_endgame.setEnabled(true);
+                } else {
+                    m_teleop.setEnabled(true);
+                    m_endgame.setEnabled(false);
+                }
+
+                m_defenceModeLayout.setVisibility(View.VISIBLE);
+
+                if (m_currentForm.currentAction == Constants.GameAction.DEFENCE) {
+
+                    m_defence.setEnabled(false);
+                    m_offence.setEnabled(true);
+                    m_defenceTypeLayout.setVisibility(View.VISIBLE);
+
+                    if (m_currentForm.currentDefenceType == Constants.DefenceType.DEFENDING) {
+                        m_defending.setEnabled(false);
+                        m_idle.setEnabled(true);
+                    } else {
+                        m_defending.setEnabled(true);
+                        m_idle.setEnabled(false);
+                    }
+                } else {
+                    m_defence.setEnabled(false);
+                    m_offence.setEnabled(true);
+                    m_defenceTypeLayout.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            m_new.setEnabled(true);
+            m_send.setEnabled(true);
+            m_save.setEnabled(true);
+            m_load.setEnabled(true);
+
             m_auto.setEnabled(false);
-            m_teleop.setEnabled(true);
-            m_endgame.setEnabled(true);
+            m_teleop.setEnabled(false);
+            m_endgame.setEnabled(false);
             m_defenceModeLayout.setVisibility(View.GONE);
             m_defenceTypeLayout.setVisibility(View.GONE);
+        }
+        if (m_currentForm.matchOver) {
+            m_matchToggle.setEnabled(false);
+            m_matchToggle.setText("Match Over");
         } else {
+            m_matchToggle.setEnabled(true);
 
-            m_auto.setEnabled(true);
-
-            if (m_currentForm.currentMode == Constants.GameMode.TELEOP) {
-                m_teleop.setEnabled(false);
-                m_endgame.setEnabled(true);
+            if (m_currentForm.matchStarted) {
+                m_matchToggle.setText("End Match");
             } else {
-                m_teleop.setEnabled(true);
-                m_endgame.setEnabled(false);
-            }
-
-            m_defenceModeLayout.setVisibility(View.VISIBLE);
-
-            if (m_currentForm.currentAction == Constants.GameAction.DEFENCE) {
-
-                m_defence.setEnabled(false);
-                m_offence.setEnabled(true);
-                m_defenceTypeLayout.setVisibility(View.VISIBLE);
-
-                if (m_currentForm.currentDefenceType == Constants.DefenceType.DEFENDING) {
-                    m_defending.setEnabled(false);
-                    m_idle.setEnabled(true);
-                } else {
-                    m_defending.setEnabled(true);
-                    m_idle.setEnabled(false);
-                }
-            } else {
-                m_defence.setEnabled(false);
-                m_offence.setEnabled(true);
-                m_defenceTypeLayout.setVisibility(View.GONE);
+                m_matchToggle.setText("Start Match");
             }
         }
     }
@@ -402,6 +457,7 @@ public class MainActivity extends AppCompatActivity {
                 m_currentForm.scoutName = name.getText().toString();
                 m_currentForm.matchNumber = Integer.parseInt(number.getText().toString());
                 updateTeamInfo();
+                updateShelf();
             }
         });
 

@@ -4,6 +4,9 @@ public class Constants {
 
     public static final int SCOUT_NAME_MAX_UI_LENGTH = 20;
 
+    public static final String START_MATCH_ERROR = "Please Start The Match";
+    public static final String MATCH_OVER_ERROR = "Cannot Edit After The Match Has Been Ended";
+
     public enum GameMode {
         AUTO, TELEOP, ENDGAME
     }
