@@ -2,6 +2,8 @@ package com.example.jacob.bluetoothtest;
 
 public class Constants {
 
+    public static final int SCOUT_NAME_MAX_UI_LENGTH = 20;
+
     public enum GameMode {
         AUTO, TELEOP, ENDGAME
     }

@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ScoutingForm m_currentForm = new ScoutingForm();
 
-    private Button m_redTrench, m_blueTrench, m_redTarget, m_blueTarget, m_shieldGenerator, m_auto, m_teleop, m_endgame, m_offence, m_defence, m_defending, m_idle;
+    private Button m_redTrench, m_blueTrench, m_redTarget, m_blueTarget, m_shieldGenerator, m_auto, m_teleop, m_endgame, m_offence, m_defence, m_defending, m_idle, m_new, m_load, m_save, m_send;
     private ImageButton m_shelfButton;
-    private LinearLayout m_shelfLayout;
+    private LinearLayout m_shelfLayout, m_defenceModeLayout, m_defenceTypeLayout;
 
     private TextView m_teamInfo;
 
@@ -81,9 +81,28 @@ public class MainActivity extends AppCompatActivity {
         m_offence = findViewById(R.id.offence);
         m_defence = findViewById(R.id.defence);
 
+        m_defenceModeLayout = findViewById(R.id.defenceMode);
+        m_defenceTypeLayout = findViewById(R.id.defenceType);
+
         m_teamInfo = findViewById(R.id.teamInfo);
 
+        m_new = findViewById(R.id.newForm);
+
         updateTeamInfo();
+        updateShelf();
+
+        m_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ScoutingForm form = new ScoutingForm();
+                form.team = m_currentForm.team;
+                form.driverStation = m_currentForm.driverStation;
+                form.scoutName = m_currentForm.scoutName;
+                form.matchNumber = m_currentForm.matchNumber + 1;
+                m_currentForm = form;
+                showSetupAlert();
+            }
+        });
 
         m_redTrench.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
                     if (m_currentForm.team == Constants.Team.RED) {
                         showTargetAlert();
                     } else {
-
+                        if (m_currentForm.currentMode != Constants.GameMode.AUTO) {
+                            showStationAlert();
+                        }
                     }
                 }
             }
@@ -123,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
                     if (m_currentForm.team == Constants.Team.BLUE) {
                         showTargetAlert();
                     } else {
-
+                        if (m_currentForm.currentMode != Constants.GameMode.AUTO) {
+                            showStationAlert();
+                        }
                     }
                 }
             }
@@ -148,6 +171,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        m_auto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentMode = Constants.GameMode.AUTO;
+                updateShelf();
+            }
+        });
+
+        m_teleop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentMode = Constants.GameMode.TELEOP;
+                updateShelf();
+            }
+        });
+
+        m_endgame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentMode = Constants.GameMode.ENDGAME;
+                updateShelf();
+            }
+        });
+
+        showSetupAlert();
     }
 
     boolean isShelfOut() {
@@ -155,8 +204,194 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateTeamInfo() {
-        m_teamInfo.setText("" + m_currentForm.team + " - " + m_currentForm.driverStation);
+        m_teamInfo.setText((m_currentForm.scoutName.length() > 20 ? m_currentForm.scoutName.substring(0, 17) + "..." : m_currentForm.scoutName) + " Scouting " + m_currentForm.team + " - " + m_currentForm.driverStation + " For Match " + m_currentForm.matchNumber);
         m_teamInfo.setTextColor((m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam)));
+    }
+
+    void updateShelf() {
+        if (m_currentForm.currentMode == Constants.GameMode.AUTO) {
+            m_auto.setEnabled(false);
+            m_teleop.setEnabled(true);
+            m_endgame.setEnabled(true);
+            m_defenceModeLayout.setVisibility(View.GONE);
+            m_defenceTypeLayout.setVisibility(View.GONE);
+        } else {
+
+            m_auto.setEnabled(true);
+
+            if (m_currentForm.currentMode == Constants.GameMode.TELEOP) {
+                m_teleop.setEnabled(false);
+                m_endgame.setEnabled(true);
+            } else {
+                m_teleop.setEnabled(true);
+                m_endgame.setEnabled(false);
+            }
+
+            m_defenceModeLayout.setVisibility(View.VISIBLE);
+
+            if (m_currentForm.currentAction == Constants.GameAction.DEFENCE) {
+
+                m_defence.setEnabled(false);
+                m_offence.setEnabled(true);
+                m_defenceTypeLayout.setVisibility(View.VISIBLE);
+
+                if (m_currentForm.currentDefenceType == Constants.DefenceType.DEFENDING) {
+                    m_defending.setEnabled(false);
+                    m_idle.setEnabled(true);
+                } else {
+                    m_defending.setEnabled(true);
+                    m_idle.setEnabled(false);
+                }
+            } else {
+                m_defence.setEnabled(false);
+                m_offence.setEnabled(true);
+                m_defenceTypeLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    void showSetupAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setCancelable(true);
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.dialog_setup, null);
+
+        //setup
+
+        final Button red = layout.findViewById(R.id.red);
+        final Button blue = layout.findViewById(R.id.blue);
+
+        final Button one = layout.findViewById(R.id.one);
+        final Button two = layout.findViewById(R.id.two);
+        final Button three = layout.findViewById(R.id.three);
+
+        final EditText name = layout.findViewById(R.id.scoutName);
+        final EditText number = layout.findViewById(R.id.matchNumber);
+
+        name.setText(m_currentForm.scoutName);
+        number.setText("" + m_currentForm.matchNumber);
+
+        red.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.team = Constants.Team.RED;
+            }
+        });
+
+        blue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.team = Constants.Team.BLUE;
+            }
+        });
+
+        one.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.driverStation = 1;
+            }
+        });
+
+        two.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.driverStation = 2;
+            }
+        });
+
+        three.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.driverStation = 3;
+            }
+        });
+
+        builder.setView(layout);
+
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                m_currentForm.scoutName = name.getText().toString();
+                m_currentForm.matchNumber = Integer.parseInt(number.getText().toString());
+                updateTeamInfo();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    void showStationAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setCancelable(true);
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.dialog_intake, null);
+
+        //setup
+
+        final EditText loaded = layout.findViewById(R.id.loaded);
+        final EditText missed = layout.findViewById(R.id.missed);
+
+        loaded.setText("" + m_currentForm.loadingStationIntake);
+        missed.setText("" + (m_currentForm.loadingStationIntakeAttempt - m_currentForm.loadingStationIntake));
+
+        final Button addLoaded = layout.findViewById(R.id.addLoaded);
+        final Button addMissed = layout.findViewById(R.id.addMissed);
+
+        addLoaded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    loaded.setText("" + (Integer.parseInt(loaded.getText().toString()) + 1));
+                } catch (NumberFormatException e) {
+
+                }
+            }
+        });
+
+        addMissed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    missed.setText("" + (Integer.parseInt(missed.getText().toString()) + 1));
+                } catch (NumberFormatException e) {
+
+                }
+            }
+        });
+
+        builder.setView(layout);
+
+        builder.setPositiveButton(R.string.affirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                EditText loaded = ((AlertDialog) dialogInterface).findViewById(R.id.loaded);
+                EditText missed = ((AlertDialog) dialogInterface).findViewById(R.id.missed);
+
+                try {
+                    m_currentForm.loadingStationIntake = Integer.parseInt(loaded.getText().toString());
+                    m_currentForm.loadingStationIntakeAttempt = Integer.parseInt(loaded.getText().toString()) + Integer.parseInt(missed.getText().toString());
+                } catch (NumberFormatException e) {
+
+                }
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     void showTargetAlert() {

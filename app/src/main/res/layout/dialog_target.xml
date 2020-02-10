@@ -28,7 +28,6 @@
             android:id="@+id/scoredHigh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:hint="Scored High"
             android:inputType="number" />
@@ -57,7 +56,6 @@
             android:id="@+id/missedHigh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:hint="Missed High"
             android:inputType="number" />
@@ -86,7 +84,6 @@
             android:id="@+id/scoredLow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:hint="Scored Low"
             android:inputType="number" />
@@ -115,7 +112,6 @@
             android:id="@+id/missedLow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:hint="Missed Low"
             android:inputType="number" />

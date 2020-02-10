@@ -10,6 +10,10 @@ public class ScoutingForm {
     public Constants.Team team = Constants.Team.RED;
     public int driverStation = 1;
 
+    public int matchNumber = 0;
+
+    public String scoutName = "";
+
     public Constants.GameMode currentMode = Constants.GameMode.AUTO;
     public Constants.GameAction currentAction = Constants.GameAction.OFFENCE;
     public Constants.DefenceType currentDefenceType = Constants.DefenceType.DEFENDING;

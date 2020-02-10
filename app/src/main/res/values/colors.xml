@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#acacac</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#8e0002</color>
-    <color name="accent_material_dark_1">#990000</color>
+    <color name="colorAccent">#AC0004</color>
+    <color name="accent_material_dark_1">#AD0000</color>
     <color name="redTeam">#F44336</color>
     <color name="blueTeam">#2196F3</color>
     <color name="greenColor">#4CAF50</color>
