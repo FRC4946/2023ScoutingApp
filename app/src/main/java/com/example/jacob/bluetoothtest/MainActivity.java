@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +18,6 @@ import android.widget.EditText;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 if (m_currentForm.matchStarted) {
                     m_currentForm.matchOver = true;
                     m_currentForm.crossedAutoLine = m_autoCross.isChecked();
-                    m_currentForm.finalize();
+                    m_currentForm.complete();
                     m_matchToggle.setEnabled(false);
                 } else {
                     m_currentForm.matchStarted = true;
@@ -274,6 +271,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        m_load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LoadActivity.class);
+                startActivity(intent);
+            }
+        });
+
         if (m_loadName != null) {
             Log.i("A", "File recieved, loading" + m_loadName);
 
@@ -286,7 +291,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.i("A", "Error Reading File");
             }
-
+            updateShelf();
+            updateTeamInfo();
         } else {
             showSetupAlert();
         }
@@ -370,9 +376,15 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             m_new.setEnabled(true);
-            m_send.setEnabled(true);
-            m_save.setEnabled(true);
             m_load.setEnabled(true);
+
+            if (m_currentForm.matchOver) {
+                m_send.setEnabled(true);
+                m_save.setEnabled(true);
+            } else {
+                m_send.setEnabled(false);
+                m_save.setEnabled(false);
+            }
 
             m_endgame.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             m_teleop.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
@@ -839,6 +851,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.setView(layout);
+
+        builder.setPositiveButton(R.string.affirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
 
         AlertDialog dialog = builder.create();
         dialog.show();

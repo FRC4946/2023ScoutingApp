@@ -48,7 +48,13 @@ public class ScoutingForm {
 
     }
 
-    public void finalize() {
+    public void complete() {
+        if (defenceTimes.size() > 0) {
+            defenceTimes.get(defenceTimes.size() - 1).tryEnd();
+        }
+        if (activeDefenceTimes.size() > 0) {
+            activeDefenceTimes.get(activeDefenceTimes.size() - 1).tryEnd();
+        }
         defenceTime = TimePeriod.millisToSeconds(getTimeListSum(defenceTimes));
         activeDefenceTime = TimePeriod.millisToSeconds(getTimeListSum(activeDefenceTimes));
         if (!climbPeriod.ended()) {
@@ -106,6 +112,9 @@ public class ScoutingForm {
         ret.defenceTime = Double.parseDouble(arr[14]);
         ret.climbTime = Double.parseDouble(arr[15]);
         ret.climb = Constants.Climb.fromString(arr[16]);
+
+        ret.matchStarted = true;
+        ret.matchOver = true;
 
         return ret;
     }
