@@ -26,15 +26,11 @@ public class LoadActivity extends AppCompatActivity {
 
 
     //Stuff for updating selected files
-    static int selected; //the selected radiobutton
-    static File[] existingFiles;
+    int selected; //the selected radiobutton
+    File[] existingFiles;
     RadioGroup filesGroup;
     ArrayList<RadioButton> fileButtons;
 
-    /** Run when the activity is launched
-     *
-     * @param savedInstanceState IDK android handles it
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,75 +102,14 @@ public class LoadActivity extends AppCompatActivity {
 
                 if (existingFiles.length > 0) {
                     Log.i("A", "Requesting permissions");
-                    requestStoragePermission();
+                    ActivityCompat.requestPermissions(LoadActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.DELETE_LOG_REQUEST);
                 } else {
                     Log.i("A", "No files found");
                 }
 
             }
         });
-
-    }
-
-    /**Takes a scouting log and returns the match number present in the csv file
-     *
-     * @param file CSV file to read from
-     * @return Name of team in scouting log
-     */
-    public static String getMatchNumber(File file) {
-
-        String content = null;
-        BufferedReader reader = null; //To avoid compiler errors
-
-        try { //Creates a buffered reader, reads File file, result is saved in content
-            reader = new BufferedReader(new FileReader(file));
-            content = reader.readLine();
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] splitString = content.split(","); //Splits file into different field (assumes file is an alpha dogs formatted CSV)
-
-        if (splitString.length > 1) {
-            return splitString[1]; //returns team name
-        } else {
-            return "<invalid>";
-        }
-
-
-    }
-
-    /**Takes a scouting log and returns the team name present in the csv file
-     *
-     * @param file CSV file to read from
-     * @return Name of team in scouting log
-     */
-    public static String getTeamNumber(File file) {
-
-        String content = null;
-        BufferedReader reader = null; //To avoid compiler errors
-
-        try { //Creates a buffered reader, reads File file, result is saved in content
-            reader = new BufferedReader(new FileReader(file));
-            content = reader.readLine();
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] splitString = content.split(","); //Splits file into different field (assumes file is an alpha dogs formatted CSV)
-
-        if (splitString.length > 0) {
-            return splitString[0]; //returns team name
-        } else {
-            return "<invalid>";
-        }
-
 
     }
 
@@ -186,29 +121,9 @@ public class LoadActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         String fileName = file.getAbsolutePath();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(Intent.EXTRA_TEXT, fileName);
         startActivity(intent);
-
-    }
-
-    /**Requests permission to access external storage, which is actually internal storage because android is retarded
-     * Calls onRequestPermissionsResult after, don't worry about arguments
-     */
-    private void requestStoragePermission() {
-        Log.i("A", "Write permission has NOT been granted. Requesting permission.");
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            //I don't actually want this to happen right now but I might later
-            Log.i("A",
-                    "Displaying write permission rationale to provide additional context.");
-
-        } else {
-
-            // Get storage permissions
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    1);
-        }
 
     }
 
@@ -223,14 +138,12 @@ public class LoadActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (requestCode == 2) {
+        if (requestCode == Constants.DELETE_LOG_REQUEST) {
 
             Log.i("A", "Received response for write permission request.");
 
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //When write permission is granted
-
-
                 //Deletes file
                 if(existingFiles[selected].delete()) {
                     Log.i("A", "File deleted");
@@ -238,14 +151,8 @@ public class LoadActivity extends AppCompatActivity {
                     Log.i("A", "Delete failed");
                 }
                 updateFiles();
-
-
             } else {
                 Log.i("A", "Write permission was NOT granted.");
-
-
-                //If the user is AcOuStIc and denies permission, do this stuff ...oOo...
-
             }
 
         } else {
@@ -260,7 +167,7 @@ public class LoadActivity extends AppCompatActivity {
     public void updateFiles() {
         //Scroll View Stuff
 
-        filesGroup = (RadioGroup) findViewById(R.id.Files); //Radiogroup containing all files to be displayed in scroll view
+        filesGroup = findViewById(R.id.Files); //Radiogroup containing all files to be displayed in scroll view
         fileButtons = new ArrayList<RadioButton>(); //Arraylist containing all Radiobuttons to be added to filesGroup
         existingFiles = new File(getApplicationInfo().dataDir + "/Logs").listFiles(); //List of saved scouting logs
 
@@ -273,7 +180,9 @@ public class LoadActivity extends AppCompatActivity {
 
                 file.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT)); //Sets layout parameters for radiobutton
 
-                file.setText((i+1) + " - Match " + getMatchNumber(existingFiles[i]).replace('_', ' ') + ", Team " + getTeamNumber(existingFiles[i]).replace('_', ' ')); //Sets text for radiobutton
+                String[] arr = existingFiles[i].getName().split("-");
+
+                file.setText((i+1) + " - Match " + arr[0] + ", Team " + arr[1]); //Sets text for radiobutton
 
                 fileButtons.add(file); //adds file to fileButtons arraylist
 

@@ -8,6 +8,7 @@ public class Constants {
     public static final String MATCH_OVER_ERROR = "Cannot Edit After The Match Has Been Ended";
 
     public static final int WRITE_LOG_REQUEST = 1;
+    public static final int DELETE_LOG_REQUEST = 2;
 
     public enum GameMode {
         AUTO, TELEOP, ENDGAME

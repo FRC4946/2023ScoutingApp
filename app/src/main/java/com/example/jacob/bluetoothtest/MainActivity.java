@@ -1,11 +1,13 @@
 package com.example.jacob.bluetoothtest;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -241,6 +243,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 m_currentForm.currentDefenceType = Constants.DefenceType.IDLE;
                 updateShelf();
+            }
+        });
+
+        m_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.WRITE_LOG_REQUEST);
             }
         });
 
@@ -814,7 +824,7 @@ public class MainActivity extends AppCompatActivity {
 
                 File home = new File(getApplicationInfo().dataDir + "/Logs"); //application directory, so: /data/data/com.whatever.otherstuff/Logs
                 home.mkdirs();
-                File csv = new File("" + m_currentForm.matchNumber + "-" + m_currentForm.teamNumber);
+                File csv = new File(home.getAbsolutePath() + "/" + m_currentForm.matchNumber + "-" + m_currentForm.teamNumber);
 
                 try {
 
