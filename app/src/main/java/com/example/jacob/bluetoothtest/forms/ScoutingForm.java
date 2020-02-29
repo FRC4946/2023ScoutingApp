@@ -70,28 +70,28 @@ public class ScoutingForm {
 
     @Override
     public String toString() {
-        return teamNumber + ", "
-                + team + ", "
-                + matchNumber + ", "
-                + scoutName + ", "
-                + (crossedAutoLine ? "True" : "False") + ", "
-                + autoBalls + ", "
-                + autoBallsShot + ", "
-                + trenchBalls + ", "
-                + trenchBallsShot + ", "
-                + fieldBalls + ", "
-                + fieldBallsShot + ", "
-                + targetBalls + ", "
-                + targetBallsShot + ", "
-                + activeDefenceTime + ", "
-                + defenceTime + ", "
-                + climbTime + ", "
+        return teamNumber + ","
+                + team + ","
+                + matchNumber + ","
+                + scoutName + ","
+                + (crossedAutoLine ? "True" : "False") + ","
+                + autoBalls + ","
+                + autoBallsShot + ","
+                + trenchBalls + ","
+                + trenchBallsShot + ","
+                + fieldBalls + ","
+                + fieldBallsShot + ","
+                + targetBalls + ","
+                + targetBallsShot + ","
+                + activeDefenceTime + ","
+                + defenceTime + ","
+                + climbTime + ","
                 + climb;
     }
 
     public static ScoutingForm fromString(String s) {
 
-        String[] arr = s.split(", ");
+        String[] arr = s.split(",");
 
         ScoutingForm ret = new ScoutingForm();
 

@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 form.scoutName = m_currentForm.scoutName;
                 form.matchNumber = m_currentForm.matchNumber + 1;
                 m_currentForm = form;
+                m_autoCross.setChecked(false);
                 showSetupAlert();
             }
         });
@@ -228,6 +229,10 @@ public class MainActivity extends AppCompatActivity {
                 if (m_currentForm.defenceTimes.size() > 0 && m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).started() && !m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).ended()) {
                     m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).tryEnd();
                 }
+                m_currentForm.currentDefenceType = Constants.DefenceType.IDLE;
+                if (m_currentForm.activeDefenceTimes.size() > 0 && m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).started() && !m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).ended()) {
+                    m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).tryEnd();
+                }
                 updateShelf();
             }
         });
@@ -275,6 +280,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoadActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        m_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SendMessageActivity.class);
+                String message = m_currentForm.toString();
+                intent.putExtra(Intent.EXTRA_TEXT, message);
                 startActivity(intent);
             }
         });
@@ -562,10 +577,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    void showStationAlert() {
-
-    }
-
     void showTargetAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -780,7 +791,7 @@ public class MainActivity extends AppCompatActivity {
         park.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_currentForm.climb = Constants.Climb.CLIMB;
+                m_currentForm.climb = Constants.Climb.PARK;
                 climb.setEnabled(true);
                 climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 park.setEnabled(false);
