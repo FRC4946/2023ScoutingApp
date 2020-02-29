@@ -18,6 +18,8 @@ import android.widget.EditText;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -25,8 +27,11 @@ import android.widget.ToggleButton;
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
 import com.example.jacob.bluetoothtest.forms.TimePeriod;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -254,7 +259,75 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        showSetupAlert();
+        if (!(loadName == null)) {
+            String[] fields = null;
+            Log.i("A", "File recieved, loading" + loadName);
+            loadedFile = true;
+            File loadFile = new File(loadName);
+
+            activityMessage = (TextView) findViewById(R.id.ActivityMessage);
+            saveButton = (Button) findViewById(R.id.SaveButton);
+
+            activityMessage.setText("Editing " + loadFile.getPath());
+            saveButton.setText("Overwrite");
+
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(new File(loadName))); //Creates a file reader on the file passed to this activity by the load activity
+
+                String content = reader.readLine(); //Gets the content of the file
+                fields = content.split(","); //Splits content into fields
+                Log.i("A", fields.length + " fields found:");
+                for (String s : fields) {
+                    Log.i("A", s);
+                }
+
+                reader.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            updateStrings();
+
+            //Sets text fields
+            if (fields.length > 0) {
+
+                //If the file isn't blank
+
+                for (int i = 0; i < fields.length; i++) {
+
+                    Log.i("A", "Setting " + texts.get(i).getId() + " to " + fields[i]);
+                    if (texts.get(i).getTag().toString().equals("text")) {
+                        ((EditText) texts.get(i)).setText(fields[i]);
+                    } else if (texts.get(i).getTag().toString().equals("bool")) {
+                        ((ToggleButton) texts.get(i)).setChecked(!fields[i].equals("false"));
+                    } else if (texts.get(i).getTag().toString().equals("radio")) {
+                        for (int j = 0; j < ((RadioGroup) texts.get(i)).getChildCount(); j++) {
+                            if (((TextView)((RadioGroup) texts.get(i)).getChildAt(j)).getText().toString().equals(fields[i])) {
+                                ((RadioButton)((RadioGroup) texts.get(i)).getChildAt(j)).setChecked(true);
+                            }
+                        }
+                    } else if (texts.get(i).getTag().toString().equals("addable")) {
+                        ((EditText) ((LinearLayout) texts.get(i)).getChildAt(0)).setText(fields[i]);
+                    }
+
+                }
+
+            } else {
+
+                //if the file is blank
+
+                clear();
+
+            }
+
+
+
+
+        } else {
+            showSetupAlert();
+        }
     }
 
     boolean isShelfOut() {
