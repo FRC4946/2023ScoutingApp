@@ -3,6 +3,7 @@ package com.example.jacob.bluetoothtest;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton m_shelfButton;
     private LinearLayout m_shelfLayout, m_defenceModeLayout, m_defenceTypeLayout;
     private ToggleButton m_autoCross;
+    private String m_loadName;
 
     private TextView m_teamInfo;
 
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        m_loadName = intent.getStringExtra(intent.EXTRA_TEXT); //Gets message from previous activity, stores in message string
 
         m_redTarget = findViewById(R.id.redTarget);
         m_blueTarget = findViewById(R.id.blueTarget);
@@ -223,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 m_currentForm.currentAction = Constants.GameAction.OFFENCE;
+                if (m_currentForm.defenceTimes.size() > 0 && m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).started() && !m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).ended()) {
+                    m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).tryEnd();
+                }
                 updateShelf();
             }
         });
@@ -231,6 +239,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 m_currentForm.currentAction = Constants.GameAction.DEFENCE;
+                m_currentForm.defenceTimes.add(new TimePeriod());
+                m_currentForm.defenceTimes.get(m_currentForm.defenceTimes.size() - 1).start();
                 updateShelf();
             }
         });
@@ -239,6 +249,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 m_currentForm.currentDefenceType = Constants.DefenceType.DEFENDING;
+                m_currentForm.activeDefenceTimes.add(new TimePeriod());
+                m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).start();
                 updateShelf();
             }
         });
@@ -247,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 m_currentForm.currentDefenceType = Constants.DefenceType.IDLE;
+                if (m_currentForm.activeDefenceTimes.size() > 0 && m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).started() && !m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).ended()) {
+                    m_currentForm.activeDefenceTimes.get(m_currentForm.activeDefenceTimes.size() - 1).tryEnd();
+                }
                 updateShelf();
             }
         });
@@ -259,71 +274,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (!(loadName == null)) {
-            String[] fields = null;
-            Log.i("A", "File recieved, loading" + loadName);
-            loadedFile = true;
-            File loadFile = new File(loadName);
-
-            activityMessage = (TextView) findViewById(R.id.ActivityMessage);
-            saveButton = (Button) findViewById(R.id.SaveButton);
-
-            activityMessage.setText("Editing " + loadFile.getPath());
-            saveButton.setText("Overwrite");
+        if (m_loadName != null) {
+            Log.i("A", "File recieved, loading" + m_loadName);
 
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(new File(loadName))); //Creates a file reader on the file passed to this activity by the load activity
-
+                BufferedReader reader = new BufferedReader(new FileReader(new File(m_loadName)));
                 String content = reader.readLine(); //Gets the content of the file
-                fields = content.split(","); //Splits content into fields
-                Log.i("A", fields.length + " fields found:");
-                for (String s : fields) {
-                    Log.i("A", s);
-                }
-
-                reader.close();
+                m_currentForm = ScoutingForm.fromString(content);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Log.i("A", "File Not Found");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.i("A", "Error Reading File");
             }
-
-            updateStrings();
-
-            //Sets text fields
-            if (fields.length > 0) {
-
-                //If the file isn't blank
-
-                for (int i = 0; i < fields.length; i++) {
-
-                    Log.i("A", "Setting " + texts.get(i).getId() + " to " + fields[i]);
-                    if (texts.get(i).getTag().toString().equals("text")) {
-                        ((EditText) texts.get(i)).setText(fields[i]);
-                    } else if (texts.get(i).getTag().toString().equals("bool")) {
-                        ((ToggleButton) texts.get(i)).setChecked(!fields[i].equals("false"));
-                    } else if (texts.get(i).getTag().toString().equals("radio")) {
-                        for (int j = 0; j < ((RadioGroup) texts.get(i)).getChildCount(); j++) {
-                            if (((TextView)((RadioGroup) texts.get(i)).getChildAt(j)).getText().toString().equals(fields[i])) {
-                                ((RadioButton)((RadioGroup) texts.get(i)).getChildAt(j)).setChecked(true);
-                            }
-                        }
-                    } else if (texts.get(i).getTag().toString().equals("addable")) {
-                        ((EditText) ((LinearLayout) texts.get(i)).getChildAt(0)).setText(fields[i]);
-                    }
-
-                }
-
-            } else {
-
-                //if the file is blank
-
-                clear();
-
-            }
-
-
-
 
         } else {
             showSetupAlert();
