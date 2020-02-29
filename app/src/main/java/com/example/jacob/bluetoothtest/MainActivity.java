@@ -2,9 +2,13 @@ package com.example.jacob.bluetoothtest;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +22,11 @@ import android.widget.ToggleButton;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
 import com.example.jacob.bluetoothtest.forms.TimePeriod;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -365,10 +374,10 @@ public class MainActivity extends AppCompatActivity {
         scored.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBalls : m_currentForm.trenchBalls));
         missed.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBallsShot - m_currentForm.autoBalls : m_currentForm.trenchBallsShot - m_currentForm.trenchBalls));
 
-        final Button addScoredHigh = layout.findViewById(R.id.addScored);
-        final Button addMissedHigh = layout.findViewById(R.id.addMissed);
+        final Button addScored = layout.findViewById(R.id.addScored);
+        final Button addMissed = layout.findViewById(R.id.addMissed);
 
-        addScoredHigh.setOnClickListener(new View.OnClickListener() {
+        addScored.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -379,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        addMissedHigh.setOnClickListener(new View.OnClickListener() {
+        addMissed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -519,10 +528,10 @@ public class MainActivity extends AppCompatActivity {
         scored.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBalls : m_currentForm.targetBalls));
         missed.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBallsShot - m_currentForm.autoBalls : m_currentForm.targetBallsShot - m_currentForm.targetBalls));
 
-        final Button addScoredHigh = layout.findViewById(R.id.addScored);
-        final Button addMissedHigh = layout.findViewById(R.id.addMissed);
+        final Button addScored = layout.findViewById(R.id.addScored);
+        final Button addMissed = layout.findViewById(R.id.addMissed);
 
-        addScoredHigh.setOnClickListener(new View.OnClickListener() {
+        addScored.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -533,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        addMissedHigh.setOnClickListener(new View.OnClickListener() {
+        addMissed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -589,10 +598,10 @@ public class MainActivity extends AppCompatActivity {
         scored.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBalls : m_currentForm.fieldBalls));
         missed.setText("" + (m_currentForm.currentMode == Constants.GameMode.AUTO ? m_currentForm.autoBallsShot - m_currentForm.autoBalls : m_currentForm.fieldBallsShot - m_currentForm.fieldBalls));
 
-        final Button addScoredHigh = layout.findViewById(R.id.addScored);
-        final Button addMissedHigh = layout.findViewById(R.id.addMissed);
+        final Button addScored = layout.findViewById(R.id.addScored);
+        final Button addMissed = layout.findViewById(R.id.addMissed);
 
-        addScoredHigh.setOnClickListener(new View.OnClickListener() {
+        addScored.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -603,7 +612,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        addMissedHigh.setOnClickListener(new View.OnClickListener() {
+        addMissed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -788,6 +797,50 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == Constants.WRITE_LOG_REQUEST) {
+
+            Log.i("A", "Received response for write permission request.");
+
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //When write permission is granted
+
+                Log.i("A", "Write permission has now been granted.");
+
+                File home = new File(getApplicationInfo().dataDir + "/Logs"); //application directory, so: /data/data/com.whatever.otherstuff/Logs
+                home.mkdirs();
+                File csv = new File("" + m_currentForm.matchNumber + "-" + m_currentForm.teamNumber);
+
+                try {
+
+
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(csv));
+                    writer.write(m_currentForm.toString());
+                    writer.close();
+
+                    Log.i("A", "Finished writing to " + csv.getAbsolutePath() + "");
+
+                    //IO crap for testing
+                    //BufferedReader reader = new BufferedReader(new FileReader(csv));
+                    //reader.close();
+                } catch (IOException e) {
+                    //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
+                    Log.i("A", "File write to " + csv.getAbsolutePath() + " failed");
+                }
+
+            } else {
+                Log.i("A", "Write permission was NOT granted.");
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
     }
 }
 
