@@ -86,7 +86,7 @@
         android:background="@color/shelfColor"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -102,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonSelectedColor"
                 android:enabled="false"
                 android:text="Auto"
                 android:textColor="@color/blueTeam" />
@@ -111,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonNotSelectedColor"
                 android:text="Teleop"
                 android:textColor="@color/redTeam" />
 
@@ -119,9 +121,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonNotSelectedColor"
                 android:text="Endgame"
                 android:textColor="@color/greenColor" />
         </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/autoLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textOff="No Cross Auto Line"
+            android:textOn="Crossed Auto Line" />
 
         <LinearLayout
             android:id="@+id/defenceMode"
@@ -134,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonSelectedColor"
                 android:text="Offence"
                 android:textColor="@color/redTeam" />
 
@@ -142,6 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonNotSelectedColor"
                 android:text="Defence"
                 android:textColor="@color/greenColor" />
         </LinearLayout>
@@ -157,6 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonSelectedColor"
                 android:text="Defending"
                 android:textColor="@color/greenColor" />
 
@@ -165,6 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/buttonNotSelectedColor"
                 android:text="Idle"
                 android:textColor="@color/blueTeam" />
         </LinearLayout>

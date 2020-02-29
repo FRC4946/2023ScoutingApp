@@ -8,7 +8,8 @@ public class ScoutingForm {
     public boolean crossedAutoLine = false;
 
     public Constants.Team team = Constants.Team.RED;
-    public int driverStation = 1;
+
+    public int teamNumber = 1;
 
     public int matchNumber = 0;
 
@@ -30,26 +31,18 @@ public class ScoutingForm {
     public long defenceTime = 0;
     public long activeDefenceTime = 0;
 
-    public int teleopHighBalls = 0;
-    public int teleopHighBallsShot = 0;
-    public int teleopLowBalls = 0;
-    public int teleopLowBallsShot = 0;
+    public int trenchBalls = 0;
+    public int trenchBallsShot = 0;
+    public int fieldBalls = 0;
+    public int fieldBallsShot = 0;
+    public int targetBalls = 0;
+    public int targetBallsShot = 0;
 
-    public int autoHighBalls = 0;
-    public int autoHighBallsShot = 0;
-    public int autoLowBalls = 0;
-    public int autoLowBallsShot = 0;
-
-    public int loadingStationIntake = 0;
-    public int loadingStationIntakeAttempt = 0;
-
-    public boolean attemptedStage2 = false;
-    public boolean successStage2 = false;
-    public boolean attemptedStage3 = false;
-    public boolean successStage3 = false;
+    public int autoBalls = 0;
+    public int autoBallsShot = 0;
 
     public boolean attemptedClimb = false;
-    public boolean climbed = false;
+    public Constants.Climb climb = Constants.Climb.NONE;
 
     private boolean m_finalized = false;
 

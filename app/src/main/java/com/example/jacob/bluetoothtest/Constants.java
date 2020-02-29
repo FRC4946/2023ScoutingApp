@@ -34,4 +34,21 @@ public class Constants {
         }
     }
 
+    public enum Climb {
+        CLIMB, PARK, NONE;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case CLIMB:
+                    return "Climb";
+                case PARK:
+                    return "Park";
+                case NONE:
+                default:
+                    return "None";
+            }
+        }
+    }
+
 }
