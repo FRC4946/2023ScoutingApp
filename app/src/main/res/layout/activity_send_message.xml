@@ -90,29 +90,6 @@
         app:layout_constraintTop_toBottomOf="@+id/SendButton"
         app:layout_constraintVertical_bias="0.0" android:layout_marginEnd="16dp" />
 
-    <ToggleButton
-        android:id="@+id/SaveOnSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SendSaved" />
-
-    <TextView
-        android:id="@+id/SaveOnSendDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/save_file"
-        app:layout_constraintBottom_toTopOf="@+id/SaveOnSend"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SendSaved" />
-
     <ProgressBar
         android:id="@+id/Sending"
         style="?android:attr/progressBarStyle"

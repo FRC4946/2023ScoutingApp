@@ -39,11 +39,7 @@ import java.util.UUID;
 
 public class SendMessageActivity extends AppCompatActivity {
 
-    //TODO : Add unique message/CSV  identifier
-
-    //TODO : Take connect of ui thread
-
-    public static BluetoothSocket socket;
+    BluetoothSocket socket;
 
     BluetoothDevice hostComputer;
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();;
@@ -51,9 +47,7 @@ public class SendMessageActivity extends AppCompatActivity {
     private OutputStream outputStream; //Stream data is written to
     private InputStream inStream; //Stream data is read from, currently unused
 
-    File fileToSend = null;
-
-    String computerAddress = "3C:F8:62:C5:8D:C4"; //"00:C2:C6:C4:71:C3" //3C:F8:62:C5:8D:C4 //Mac of computer I was testing on, doesn't need to be updated, DO NOT CHANGE, DO NOT MAKE FINAL
+    String computerAddress = "3C:F8:62:C5:8D:C4"; //"00:C2:C6:C4:71:C3" //3C:F8:62:C5:8D:C4
     final String stringUUID = "39675b0d-6dd8-4622-847f-3e5acc607e27"; //UUID of application DO NOT CHANGE
     UUID ConnectToUUID = UUID.fromString(stringUUID);
 
@@ -63,17 +57,12 @@ public class SendMessageActivity extends AppCompatActivity {
 
     EditText connectionMAC;
     TextView connectionInfo;
-    ToggleButton saveButton, sendSavedButton;
+    ToggleButton sendSavedButton;
     Button sendButton;
     ProgressBar sendingBar;
 
     boolean sending = false;
 
-
-
-    /** Launches when activity starts
-     *
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,14 +70,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        message = intent.getStringExtra("MessageToSend"); //Gets message from previous activity, stores in message string
-
-        //Deals with loaded files
-        String loadName = intent.getStringExtra("LoadedFile"); //Gets name of loaded file if it exists
-        final boolean loadedFile = (!(loadName == null));//Finds out if the file is loaded
-        if (loadedFile) {
-            fileToSend = new File(loadName);
-        }
+        message = intent.getStringExtra(Intent.EXTRA_TEXT); //Gets message from previous activity, stores in message string
 
         connectionMAC = (EditText) findViewById(R.id.MacText);
         connectionMAC.setText(computerAddress);
@@ -102,19 +84,7 @@ public class SendMessageActivity extends AppCompatActivity {
         sendingBar = (ProgressBar) findViewById(R.id.Sending);
         sendingBar.setVisibility(View.INVISIBLE);
 
-        saveButton = (ToggleButton) findViewById(R.id.SaveOnSend);
-        saveButton.setChecked(true);
-
         sendSavedButton = (ToggleButton) findViewById(R.id.SendSaved);
-
-        final TextView saveOnSendDescription = (TextView) findViewById(R.id.SaveOnSendDescription);
-
-        if (loadedFile) {
-            Log.i("A", "The file to be sent was loaded");
-            saveButton.setVisibility(View.INVISIBLE);
-            saveOnSendDescription.setVisibility(View.INVISIBLE);
-            saveButton.setChecked(false);
-        }
 
         sendButton = (Button) findViewById(R.id.SendButton);
 
@@ -177,13 +147,6 @@ public class SendMessageActivity extends AppCompatActivity {
                                         }
 
                                         write(toSend.toString());
-
-                                    }
-
-                                    if (saveButton.isChecked()) {
-
-                                        //if the save on send option is selected
-                                        requestStoragePermission();
 
                                     }
 
@@ -405,102 +368,5 @@ public class SendMessageActivity extends AppCompatActivity {
      */
     public void write(String s) throws IOException {
         outputStream.write(s.getBytes());
-    }
-
-    /**Requests permission to access external storage, which is actually internal storage because android is retarded
-     * Calls onRequestPermissionsResult after, don't worry about arguments
-     */
-    private void requestStoragePermission() {
-        Log.i("A", "Write permission has NOT been granted. Requesting permission.");
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            //I don't actually want this to happen right now but I might later
-            Log.i("A",
-                    "Displaying write permission rationale to provide additional context.");
-
-        } else {
-
-            // Get storage permissions
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    2);
-        }
-
-    }
-
-    /**Called after any permissions are requested
-     * Any other methods don't have access to external/internal storage so don't try IO anywhere else
-     *
-     * @param requestCode All these arguments are handled by android
-     * @param permissions All these arguments are handled by android
-     * @param grantResults All these arguments are handled by android
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        if (requestCode == 2) {
-
-            Log.i("A", "Received response for write permission request.");
-
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //When write permission is granted
-
-                //Save file
-
-                String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
-
-                File home = new File(getApplicationInfo().dataDir + "/Logs"); //application directory, so: /data/data/com.whatever.otherstuff/Logs
-                home.mkdirs();
-                File csv = null; //Needed this so the compiler didn't throw any errors
-
-                boolean cont = true;
-                int i = 0;
-
-                while (cont) {
-                    csv = new File(home, android_id + "-" + i + ".csv");
-
-                    if (!(csv.exists())) {
-                        cont = false;
-                    }
-
-                    i += 1;
-
-                }
-
-                Log.i("A", "File created at " + csv.getAbsolutePath() + "");
-
-                try {
-
-
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(csv));
-                    writer.write(message);
-                    writer.close();
-
-                    Log.i("A", "Finished writing to " + csv.getAbsolutePath() + "");
-
-                    //IO crap for testing
-                    //BufferedReader reader = new BufferedReader(new FileReader(csv));
-                    //reader.close();
-                } catch (IOException e) {
-                    //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
-                    Log.i("A", "File write to " + csv.getAbsolutePath() + " failed");
-                    e.printStackTrace();
-                }
-
-
-
-            } else {
-                Log.i("A", "Write permission was NOT granted.");
-
-                //If the user is AcOuStIc and denies permission, do this stuff ...oOo...
-
-            }
-
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
     }
 }

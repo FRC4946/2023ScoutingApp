@@ -64,7 +64,7 @@ public class ScoutingForm {
         m_finalized = true;
     }
 
-    public boolean getFinalized() {
+    public boolean getCompleted() {
         return m_finalized;
     }
 
