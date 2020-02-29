@@ -24,7 +24,7 @@ public class ScoutingForm {
 
     public TimePeriod m_matchPeriod = new TimePeriod();
 
-    TimePeriod climbTime = new TimePeriod();
+    public TimePeriod climbTime = new TimePeriod();
     public ArrayList<TimePeriod> defenceTimes = new ArrayList<TimePeriod>();
     public ArrayList<TimePeriod> activeDefenceTimes = new ArrayList<TimePeriod>();
 

@@ -2,6 +2,8 @@ package com.example.jacob.bluetoothtest;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         m_offence = findViewById(R.id.offence);
         m_defence = findViewById(R.id.defence);
+
+        m_defending = findViewById(R.id.defending);
+        m_idle = findViewById(R.id.idle);
 
         m_defenceModeLayout = findViewById(R.id.defenceMode);
         m_defenceTypeLayout = findViewById(R.id.defenceType);
@@ -132,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     if (m_currentForm.team == Constants.Team.RED) {
                         showTargetAlert();
                     } else {
-                        if (m_currentForm.currentMode != Constants.GameMode.AUTO) {
-                            showStationAlert();
-                        }
+
                     }
                 }
             }
@@ -147,9 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     if (m_currentForm.team == Constants.Team.BLUE) {
                         showTargetAlert();
                     } else {
-                        if (m_currentForm.currentMode != Constants.GameMode.AUTO) {
-                            showStationAlert();
-                        }
+
                     }
                 }
             }
@@ -159,7 +160,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!isShelfOut()) {
-                    Log.i("A", "Clicked Shield Generator");
+                    if (m_currentForm.currentMode == Constants.GameMode.ENDGAME) {
+                        showClimbAlert();
+                    } else {
+                        showMidFieldAlert();
+                    }
                 }
             }
         });
@@ -205,6 +210,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        m_offence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentAction = Constants.GameAction.OFFENCE;
+                updateShelf();
+            }
+        });
+
+        m_defence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentAction = Constants.GameAction.DEFENCE;
+                updateShelf();
+            }
+        });
+
+        m_defending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentDefenceType = Constants.DefenceType.DEFENDING;
+                updateShelf();
+            }
+        });
+
+        m_idle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.currentDefenceType = Constants.DefenceType.IDLE;
+                updateShelf();
+            }
+        });
+
         showSetupAlert();
     }
 
@@ -232,6 +269,9 @@ public class MainActivity extends AppCompatActivity {
                 m_autoCross.setVisibility(View.VISIBLE);
                 m_defenceModeLayout.setVisibility(View.GONE);
                 m_defenceTypeLayout.setVisibility(View.GONE);
+                m_endgame.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                m_teleop.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                m_auto.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
             } else {
 
                 m_auto.setEnabled(true);
@@ -241,15 +281,23 @@ public class MainActivity extends AppCompatActivity {
                 if (m_currentForm.currentMode == Constants.GameMode.TELEOP) {
                     m_teleop.setEnabled(false);
                     m_endgame.setEnabled(true);
+                    m_endgame.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                    m_teleop.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                    m_auto.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 } else {
                     m_teleop.setEnabled(true);
                     m_endgame.setEnabled(false);
+                    m_endgame.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                    m_teleop.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                    m_auto.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 }
 
                 m_defenceModeLayout.setVisibility(View.VISIBLE);
 
                 if (m_currentForm.currentAction == Constants.GameAction.DEFENCE) {
 
+                    m_defence.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                    m_offence.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                     m_defence.setEnabled(false);
                     m_offence.setEnabled(true);
                     m_defenceTypeLayout.setVisibility(View.VISIBLE);
@@ -257,13 +305,19 @@ public class MainActivity extends AppCompatActivity {
                     if (m_currentForm.currentDefenceType == Constants.DefenceType.DEFENDING) {
                         m_defending.setEnabled(false);
                         m_idle.setEnabled(true);
+                        m_defending.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                        m_idle.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                     } else {
                         m_defending.setEnabled(true);
                         m_idle.setEnabled(false);
+                        m_defending.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                        m_idle.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
                     }
                 } else {
-                    m_defence.setEnabled(false);
-                    m_offence.setEnabled(true);
+                    m_defence.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                    m_offence.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                    m_defence.setEnabled(true);
+                    m_offence.setEnabled(false);
                     m_defenceTypeLayout.setVisibility(View.GONE);
                 }
             }
@@ -273,11 +327,17 @@ public class MainActivity extends AppCompatActivity {
             m_save.setEnabled(true);
             m_load.setEnabled(true);
 
+            m_endgame.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            m_teleop.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            m_auto.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+
+            m_autoCross.setEnabled(false);
             m_auto.setEnabled(false);
             m_teleop.setEnabled(false);
             m_endgame.setEnabled(false);
             m_defenceModeLayout.setVisibility(View.GONE);
             m_defenceTypeLayout.setVisibility(View.GONE);
+            m_autoCross.setVisibility(View.GONE);
         }
         if (m_currentForm.matchOver) {
             m_matchToggle.setEnabled(false);
@@ -304,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
 
         //setup
 
-        ((TextView) findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Trench Shots");
+        ((TextView) layout.findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Trench Shots");
 
         final EditText scored = layout.findViewById(R.id.scored);
         final EditText missed = layout.findViewById(R.id.missed);
@@ -385,10 +445,26 @@ public class MainActivity extends AppCompatActivity {
         number.setText("" + m_currentForm.matchNumber);
         teamNumber.setText("" + m_currentForm.teamNumber);
 
+        if (m_currentForm.team == Constants.Team.RED) {
+            red.setEnabled(false);
+            red.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            blue.setEnabled(true);
+            blue.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+        } else {
+            red.setEnabled(true);
+            red.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            blue.setEnabled(false);
+            blue.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+        }
+
         red.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 m_currentForm.team = Constants.Team.RED;
+                red.setEnabled(false);
+                red.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                blue.setEnabled(true);
+                blue.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             }
         });
 
@@ -396,6 +472,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 m_currentForm.team = Constants.Team.BLUE;
+                red.setEnabled(true);
+                red.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                blue.setEnabled(false);
+                blue.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
             }
         });
 
@@ -438,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
 
         //setup
 
-        ((TextView) findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Close To Target Shots");
+        ((TextView) layout.findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Close To Target Shots");
 
         final EditText scored = layout.findViewById(R.id.scored);
         final EditText missed = layout.findViewById(R.id.missed);
@@ -508,7 +588,7 @@ public class MainActivity extends AppCompatActivity {
 
         //setup
 
-        ((TextView) findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Mid Field Shots");
+        ((TextView) layout.findViewById(R.id.targetTitle)).setText(m_currentForm.currentMode == Constants.GameMode.AUTO ? "Auto Shots" : "Mid Field Shots");
 
         final EditText scored = layout.findViewById(R.id.scored);
         final EditText missed = layout.findViewById(R.id.missed);
@@ -568,7 +648,137 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void showClimbAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setCancelable(true);
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.dialog_climb, null);
+
+        //setup
+
+        final Button climb = layout.findViewById(R.id.climb);
+        final Button park = layout.findViewById(R.id.park);
+        final Button none = layout.findViewById(R.id.none);
+
+        final Button start = layout.findViewById(R.id.start);
+        final Button end = layout.findViewById(R.id.end);
+
+        if (m_currentForm.climb == Constants.Climb.CLIMB) {
+            climb.setEnabled(false);
+            climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            park.setEnabled(true);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            none.setEnabled(true);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+        } else if (m_currentForm.climb == Constants.Climb.PARK) {
+            climb.setEnabled(true);
+            climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            park.setEnabled(false);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            none.setEnabled(true);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+        } else {
+            climb.setEnabled(true);
+            climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            park.setEnabled(true);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            none.setEnabled(false);
+            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+        }
+
+        if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
+            //Started or Over
+            start.setText("Restart Climb");
+            start.setEnabled(true);
+            end.setEnabled(true);
+        } else {
+            //Not started
+            start.setText("Start Climb");
+            start.setEnabled(true);
+            end.setEnabled(false);
+        }
+
+        climb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.climb = Constants.Climb.CLIMB;
+                climb.setEnabled(false);
+                climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                park.setEnabled(true);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                none.setEnabled(true);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            }
+        });
+
+        park.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.climb = Constants.Climb.CLIMB;
+                climb.setEnabled(true);
+                climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                park.setEnabled(false);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                none.setEnabled(true);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            }
+        });
+
+        none.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.climb = Constants.Climb.NONE;
+                climb.setEnabled(true);
+                climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                park.setEnabled(true);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                none.setEnabled(false);
+                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            }
+        });
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.climbTime.start();
+                if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
+                    //Started or Over
+                    start.setText("Restart Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(true);
+                } else {
+                    //Not started
+                    start.setText("Start Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(false);
+                }
+            }
+        });
+
+        end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_currentForm.climbTime.end();
+                if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
+                    //Started or Over
+                    start.setText("Restart Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(true);
+                } else {
+                    //Not started
+                    start.setText("Start Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(false);
+                }
+            }
+        });
+
+        builder.setView(layout);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 

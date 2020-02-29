@@ -38,6 +38,14 @@ public class TimePeriod {
         return m_endTime;
     }
 
+    public boolean started() {
+        return m_startTime == 0;
+    }
+
+    public boolean ended() {
+        return m_endTime != 0;
+    }
+
     @Override
     public String toString() {
         int duration = (int) getDurationSeconds();

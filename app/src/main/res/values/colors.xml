@@ -9,6 +9,6 @@
     <color name="greenColor">#4CAF50</color>
     <color name="shelfColor">#A5A5A5</color>
     <color name="iconColor">#DADADA</color>
-    <color name="buttonNotSelectedColor">#666666</color>
-    <color name="buttonSelectedColor">#414141</color>
+    <color name="buttonSelectedColor">#666666</color>
+    <color name="buttonNotSelectedColor">#414141</color>
 </resources>
