@@ -3,10 +3,8 @@ package com.example.jacob.bluetoothtest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,12 +17,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
+import com.example.jacob.bluetoothtest.forms.TimePeriod;
 
-/**WARNING TO WHOEVER IS READING THIS CODE, THIS WAS A LEARNING EXPERIENCE FOR ME
- * IF I WAS GOING TO DO IT AGAIN I WOULD DO IT VERY DIFFERENTLY AND MUCH BETTER
- * I DON'T HAVE TIME TO REDO EVERYTHING SO MOST OF THIS WILL PROBABLY NEVER BE FIXED
- * MOST OF THIS IS REALLY DUMB SPAGHETTI CODE AND I'M SORRY YOU NEED TO READ THROUGH IT
- */
 public class MainActivity extends AppCompatActivity {
 
     private ScoutingForm m_currentForm = new ScoutingForm();
@@ -36,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView m_teamInfo;
 
-    /** Launches when activity starts
-     *
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (m_currentForm.matchStarted) {
                     m_currentForm.matchOver = true;
+                    m_currentForm.crossedAutoLine = m_autoCross.isChecked();
+                    m_currentForm.finalize();
                     m_matchToggle.setEnabled(false);
                 } else {
                     m_currentForm.matchStarted = true;
@@ -671,28 +664,33 @@ public class MainActivity extends AppCompatActivity {
             park.setEnabled(true);
             park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             none.setEnabled(true);
-            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
         } else if (m_currentForm.climb == Constants.Climb.PARK) {
             climb.setEnabled(true);
             climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             park.setEnabled(false);
             park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
             none.setEnabled(true);
-            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+            none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
         } else {
             climb.setEnabled(true);
-            climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             park.setEnabled(true);
             park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             none.setEnabled(false);
-            park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+            none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
         }
 
-        if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
-            //Started or Over
+        if (m_currentForm.climbPeriod.started() && !m_currentForm.climbPeriod.ended()) {
+            //Started
             start.setText("Restart Climb");
             start.setEnabled(true);
             end.setEnabled(true);
+        } else if (m_currentForm.climbPeriod.ended()) {
+            //Over
+            start.setText("Restart Climb");
+            start.setEnabled(true);
+            end.setEnabled(false);
         } else {
             //Not started
             start.setText("Start Climb");
@@ -709,7 +707,7 @@ public class MainActivity extends AppCompatActivity {
                 park.setEnabled(true);
                 park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 none.setEnabled(true);
-                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             }
         });
 
@@ -722,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
                 park.setEnabled(false);
                 park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
                 none.setEnabled(true);
-                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
+                none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
             }
         });
 
@@ -731,23 +729,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 m_currentForm.climb = Constants.Climb.NONE;
                 climb.setEnabled(true);
-                climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                climb.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 park.setEnabled(true);
                 park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonNotSelectedColor)));
                 none.setEnabled(false);
-                park.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
+                none.setBackground(new ColorDrawable(getResources().getColor(R.color.buttonSelectedColor)));
             }
         });
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_currentForm.climbTime.start();
-                if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
-                    //Started or Over
+                m_currentForm.climbPeriod = new TimePeriod();
+                m_currentForm.climbPeriod.start();
+                if (m_currentForm.climbPeriod.started() && !m_currentForm.climbPeriod.ended()) {
+                    //Started
                     start.setText("Restart Climb");
                     start.setEnabled(true);
                     end.setEnabled(true);
+                } else if (m_currentForm.climbPeriod.ended()) {
+                    //Over
+                    start.setText("Restart Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(false);
                 } else {
                     //Not started
                     start.setText("Start Climb");
@@ -760,12 +764,17 @@ public class MainActivity extends AppCompatActivity {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_currentForm.climbTime.end();
-                if (m_currentForm.climbTime.started() || m_currentForm.climbTime.ended()) {
-                    //Started or Over
+                m_currentForm.climbPeriod.end();
+                if (m_currentForm.climbPeriod.started() && !m_currentForm.climbPeriod.ended()) {
+                    //Started
                     start.setText("Restart Climb");
                     start.setEnabled(true);
                     end.setEnabled(true);
+                } else if (m_currentForm.climbPeriod.ended()) {
+                    //Over
+                    start.setText("Restart Climb");
+                    start.setEnabled(true);
+                    end.setEnabled(false);
                 } else {
                     //Not started
                     start.setText("Start Climb");

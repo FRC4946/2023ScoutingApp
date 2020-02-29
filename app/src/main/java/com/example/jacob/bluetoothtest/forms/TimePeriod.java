@@ -26,6 +26,10 @@ public class TimePeriod {
         return ((double) getDuration()) / 1000d;
     }
 
+    public static double millisToSeconds(long millis) {
+        return ((double) millis) / 1000d;
+    }
+
     public double getDurationMinutes() {
         return getDurationSeconds() / 60d;
     }
@@ -39,7 +43,7 @@ public class TimePeriod {
     }
 
     public boolean started() {
-        return m_startTime == 0;
+        return m_startTime != 0;
     }
 
     public boolean ended() {

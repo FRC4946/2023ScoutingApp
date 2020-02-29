@@ -32,6 +32,14 @@ public class Constants {
                     return "Red";
             }
         }
+
+        public static Team fromString(String s) {
+            if ("Blue".equals(s)) {
+                return BLUE;
+            } else {
+                return RED;
+            }
+        }
     }
 
     public enum Climb {
@@ -47,6 +55,16 @@ public class Constants {
                 case NONE:
                 default:
                     return "None";
+            }
+        }
+
+        public static Climb fromString(String s) {
+            if ("Climb".equals(s)) {
+                return CLIMB;
+            } else if ("Park".equals(s)) {
+                return PARK;
+            } else {
+                return NONE;
             }
         }
     }

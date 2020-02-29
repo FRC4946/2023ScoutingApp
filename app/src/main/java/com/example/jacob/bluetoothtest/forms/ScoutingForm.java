@@ -17,19 +17,18 @@ public class ScoutingForm {
 
     public Constants.GameMode currentMode = Constants.GameMode.AUTO;
     public Constants.GameAction currentAction = Constants.GameAction.OFFENCE;
-    public Constants.DefenceType currentDefenceType = Constants.DefenceType.DEFENDING;
+    public Constants.DefenceType currentDefenceType = Constants.DefenceType.IDLE;
 
     public boolean matchOver = false;
     public boolean matchStarted = false;
 
-    public TimePeriod m_matchPeriod = new TimePeriod();
-
-    public TimePeriod climbTime = new TimePeriod();
+    public TimePeriod climbPeriod = new TimePeriod();
     public ArrayList<TimePeriod> defenceTimes = new ArrayList<TimePeriod>();
     public ArrayList<TimePeriod> activeDefenceTimes = new ArrayList<TimePeriod>();
 
-    public long defenceTime = 0;
-    public long activeDefenceTime = 0;
+    public double defenceTime = 0;
+    public double activeDefenceTime = 0;
+    public double climbTime = 0;
 
     public int trenchBalls = 0;
     public int trenchBallsShot = 0;
@@ -41,7 +40,6 @@ public class ScoutingForm {
     public int autoBalls = 0;
     public int autoBallsShot = 0;
 
-    public boolean attemptedClimb = false;
     public Constants.Climb climb = Constants.Climb.NONE;
 
     private boolean m_finalized = false;
@@ -51,8 +49,12 @@ public class ScoutingForm {
     }
 
     public void finalize() {
-        defenceTime = getTimeListSum(defenceTimes);
-        activeDefenceTime = getTimeListSum(activeDefenceTimes);
+        defenceTime = TimePeriod.millisToSeconds(getTimeListSum(defenceTimes));
+        activeDefenceTime = TimePeriod.millisToSeconds(getTimeListSum(activeDefenceTimes));
+        if (!climbPeriod.ended()) {
+            climbPeriod = new TimePeriod();
+        }
+        climbTime = climbPeriod.getDurationSeconds();
         m_finalized = true;
     }
 
@@ -62,11 +64,50 @@ public class ScoutingForm {
 
     @Override
     public String toString() {
-        return "";
+        return teamNumber + ", "
+                + team + ", "
+                + matchNumber + ", "
+                + scoutName + ", "
+                + (crossedAutoLine ? "True" : "False") + ", "
+                + autoBalls + ", "
+                + autoBallsShot + ", "
+                + trenchBalls + ", "
+                + trenchBallsShot + ", "
+                + fieldBalls + ", "
+                + fieldBallsShot + ", "
+                + targetBalls + ", "
+                + targetBallsShot + ", "
+                + activeDefenceTime + ", "
+                + defenceTime + ", "
+                + climbTime + ", "
+                + climb;
     }
 
     public static ScoutingForm fromString(String s) {
-        return new ScoutingForm();
+
+        String[] arr = s.split(", ");
+
+        ScoutingForm ret = new ScoutingForm();
+
+        ret.teamNumber = Integer.parseInt(arr[0]);
+        ret.team = Constants.Team.fromString(arr[1]);
+        ret.matchNumber = Integer.parseInt(arr[2]);
+        ret.scoutName = arr[3];
+        ret.crossedAutoLine = "True".equals(arr[4]);
+        ret.autoBalls = Integer.parseInt(arr[5]);
+        ret.autoBallsShot = Integer.parseInt(arr[6]);
+        ret.trenchBalls = Integer.parseInt(arr[7]);
+        ret.trenchBallsShot = Integer.parseInt(arr[8]);
+        ret.fieldBalls = Integer.parseInt(arr[9]);
+        ret.fieldBallsShot = Integer.parseInt(arr[10]);
+        ret.targetBalls = Integer.parseInt(arr[11]);
+        ret.targetBallsShot = Integer.parseInt(arr[12]);
+        ret.activeDefenceTime = Double.parseDouble(arr[13]);
+        ret.defenceTime = Double.parseDouble(arr[14]);
+        ret.climbTime = Double.parseDouble(arr[15]);
+        ret.climb = Constants.Climb.fromString(arr[16]);
+
+        return ret;
     }
 
     private long getTimeListSum(ArrayList<TimePeriod> list) {
