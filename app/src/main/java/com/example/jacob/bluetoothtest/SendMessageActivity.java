@@ -39,9 +39,9 @@ import java.util.UUID;
 
 public class SendMessageActivity extends AppCompatActivity {
 
-    //TODO : Add unique message/CSV  identifier
+    //TODO : Add unique message/CSV identifier
 
-    //TODO : Take connect of ui thread
+    //TODO : Take connect off of ui thread
 
     public static BluetoothSocket socket;
 
@@ -53,8 +53,8 @@ public class SendMessageActivity extends AppCompatActivity {
 
     File fileToSend = null;
 
-    String computerAddress = "3C:F8:62:C5:8D:C4"; //"00:C2:C6:C4:71:C3" //3C:F8:62:C5:8D:C4 //Mac of computer I was testing on, doesn't need to be updated, DO NOT CHANGE, DO NOT MAKE FINAL
-    final String stringUUID = "39675b0d-6dd8-4622-847f-3e5acc607e27"; //UUID of application DO NOT CHANGE
+    String computerAddress = "3C:F8:62:C5:8D:C4";
+    final String stringUUID = "39675b0d-6dd8-4622-847f-3e5acc607e27";
     UUID ConnectToUUID = UUID.fromString(stringUUID);
 
     boolean connected = false;
@@ -169,22 +169,18 @@ public class SendMessageActivity extends AppCompatActivity {
 
                                             BufferedReader reader = new BufferedReader(new FileReader(f));
 
-                                            //write("" + reader.readLine() + "\n"); //Writes contents of loaded file t ooutput stream
-                                            toSend.append("" + reader.readLine() + "\n");
+                                            toSend.append(reader.readLine()).append("\n");
 
                                             reader.close();
-
                                         }
 
                                         write(toSend.toString());
-
                                     }
 
                                     if (saveButton.isChecked()) {
 
-                                        //if the save on send option is selected
+                                        //if the save on send option is selected, get storage permission
                                         requestStoragePermission();
-
                                     }
 
                                     runOnUiThread(new Runnable() {
@@ -208,33 +204,9 @@ public class SendMessageActivity extends AppCompatActivity {
                                     }
                                     boolean received = waitForEnd(); //waits until it times out or receives the end message
 
-                                    if (!received) {
-                                        Log.i("A", "Error Sending Message");
-                                        runOnUiThread(new Runnable() {
-                                            public void run() {
-                                                connectionInfo.setText("Error Sending Message");
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(SendMessageActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-                                                builder.setMessage("The Message Failed To Send. Please Try Again.").setTitle("Not Sent").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                    }
-                                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                    }
-                                                }).setCancelable(false).setIcon(R.mipmap.alpha_dogs_logo);
-                                                builder.create();
-                                                builder.show();
-                                            }
-                                        });
-                                    }
-
-                                    socket.close();
-                                } catch (IOException e) {
-                                    Log.i("A", "Error Sending Message");
-                                    runOnUiThread(new Runnable() {
+                                    //anonymously extend instead of using
+                                    //lambda here to maintain compatibility with older versions of android
+                                    Runnable showCancelAlert = new Runnable() {
                                         public void run() {
                                             connectionInfo.setText("Error Sending Message");
                                             AlertDialog.Builder builder = new AlertDialog.Builder(SendMessageActivity.this, android.R.style.Theme_Material_Dialog_Alert);
@@ -252,8 +224,19 @@ public class SendMessageActivity extends AppCompatActivity {
                                             builder.create();
                                             builder.show();
                                         }
-                                    });
+                                    };
 
+                                    if (!received) {
+                                        //Shows error sending alert if does not receive acknowledgement from server
+                                        Log.i("A", "Error Sending Message");
+                                        runOnUiThread(showCancelAlert);
+                                    }
+
+                                    socket.close();
+                                } catch (IOException e) {
+                                    //Shows error alert because of IOException
+                                    Log.i("A", "Error Sending Message");
+                                    runOnUiThread(showCancelAlert);
                                     e.printStackTrace();
                                 }
                                 connected = false;
@@ -346,7 +329,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
     /**Creates the connection between the client and server apps, requires that the two devices are paired
      *
-     * @throws IOException never gonna happen
+     * @throws IOException never gonna happen hopefully
      */
     private void init() throws IOException {
 
@@ -354,7 +337,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
         if (mBluetoothAdapter == null) {
             /* Device doesn't support Bluetooth
-            app crashes if this is true, put error handling code in here
+            app currently crashes if this is true, put error handling code in here
 
 
              */
@@ -407,8 +390,9 @@ public class SendMessageActivity extends AppCompatActivity {
         outputStream.write(s.getBytes());
     }
 
-    /**Requests permission to access external storage, which is actually internal storage because android is retarded
-     * Calls onRequestPermissionsResult after, don't worry about arguments
+    /**Requests permission to access external storage, which is actually internal device storage 
+     * (external as in outside of the scope of the sandbox the application runs in).
+     * calls onRequestPermissionsResult after, don't worry about arguments
      */
     private void requestStoragePermission() {
         Log.i("A", "Write permission has NOT been granted. Requesting permission.");
@@ -453,7 +437,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
                 File home = new File(getApplicationInfo().dataDir + "/Logs"); //application directory, so: /data/data/com.whatever.otherstuff/Logs
                 home.mkdirs();
-                File csv = null; //Needed this so the compiler didn't throw any errors
+                File csv = null;
 
                 boolean cont = true;
                 int i = 0;
@@ -482,7 +466,6 @@ public class SendMessageActivity extends AppCompatActivity {
 
                     //IO crap for testing
                     //BufferedReader reader = new BufferedReader(new FileReader(csv));
-                    //reader.close();
                 } catch (IOException e) {
                     //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
                     Log.i("A", "File write to " + csv.getAbsolutePath() + " failed");
@@ -494,7 +477,7 @@ public class SendMessageActivity extends AppCompatActivity {
             } else {
                 Log.i("A", "Write permission was NOT granted.");
 
-                //If the user is AcOuStIc and denies permission, do this stuff ...oOo...
+                //If the user denies permission, do this stuff
 
             }
 

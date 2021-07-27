@@ -32,11 +32,6 @@ import android.widget.ToggleButton;
 
 import org.w3c.dom.Text;
 
-/**WARNING TO WHOEVER IS READING THIS CODE, THIS WAS A LEARNING EXPERIENCE FOR ME
- * IF I WAS GOING TO DO IT AGAIN I WOULD DO IT VERY DIFFERENTLY AND MUCH BETTER
- * I DON'T HAVE TIME TO REDO EVERYTHING SO MOST OF THIS WILL PROBABLY NEVER BE FIXED
- * MOST OF THIS IS REALLY DUMB SPAGHETTI CODE AND I'M SORRY YOU NEED TO READ THROUGH IT
- */
 public class MainActivity extends AppCompatActivity {
 
     //TODO : Add overwrite feature
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         //Load Settings
         readSettings();
 
-        //LAyout Stuff
+        //Layout Stuff
 
         //List fields stuff
         final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.TextFields); //gets linear layout containing editTexts
@@ -222,29 +217,8 @@ public class MainActivity extends AppCompatActivity {
                 //TODO : Add archival system
 
                 requestStoragePermission(WRITE_LOG);
-
-                //Some irrelevant IO crap
-                /*
-
-                try {
-                    FileWriter writer = new FileWriter(csv);
-                    FileReader reader = new FileReader(csv);
-
-                    writer.write("hi");
-                    writer.close();
-
-                    teamName.setText(reader.read());
-                    reader.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-               }
-            */
-
             }
-
-
-                                      });
+        });
 
         sendButton.setOnClickListener(new View.OnClickListener() {
 
@@ -256,8 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
                 sendMessage();
             }
-
-                                      });
+        });
 
 
     }
@@ -283,19 +256,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void readSettings() {
         File settingsDirectory = new File(getApplicationInfo().dataDir + "/Settings");
-        if (!settingsDirectory.exists()) { //If settings doesn't exist
-            //settings.mkdirs();
+        if (!settingsDirectory.exists()) { //If settings doesn't exist, create settings directory
             requestStoragePermission(MAKE_SETTINGS_DIRECTORY);
         } else { //If settings does exist
             File settings = new File(settingsDirectory.getAbsolutePath() + "settings.ini");
-
-
-
         }
     }
 
-    /**Requests permission to access external storage, which is actually internal storage because android is retarded
-     * Calls onRequestPermissionsResult after, don't worry about arguments
+    /**Requests permission to access external storage, which is actually internal device storage 
+     * (external as in outside of the scope of the sandbox the application runs in).
+     * calls onRequestPermissionsResult after, don't worry about arguments
      */
     private void requestStoragePermission(int request) {
         Log.i("A", "Write permission has NOT been granted. Requesting permission.");
@@ -379,9 +349,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("A", "Finished writing to " + csv.getAbsolutePath() + "");
                     activityMessage.setText("CSV File Saved");
 
-                    //IO crap for testing
-                    //BufferedReader reader = new BufferedReader(new FileReader(csv));
-                    //reader.close();
                 } catch (IOException e) {
                     //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
                     Log.i("A", "File write to " + csv.getAbsolutePath() + " failed");
@@ -394,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
                 activityMessage.setText("CSV File Save Failed, Permission Error");
 
-                //If the user is AcOuStIc and denies permission, do this stuff ...oOo...
+                //If the user denies permission, do this stuff
 
             }
 
@@ -478,5 +445,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-

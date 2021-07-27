@@ -24,7 +24,6 @@ public class LoadActivity extends AppCompatActivity {
 
     //TODO : add image to file icon radiobutton thing
 
-
     //Stuff for updating selected files
     static int selected; //the selected radiobutton
     static File[] existingFiles;
@@ -33,7 +32,7 @@ public class LoadActivity extends AppCompatActivity {
 
     /** Run when the activity is launched
      *
-     * @param savedInstanceState IDK android handles it
+     * @param savedInstanceState previously saved activity instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +115,13 @@ public class LoadActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * THE NEXT TWO METHODS AREN'T VERY WELL THOUGHT OUT
+     * A better way to do this would have been to retrieve file content once, and take it as an argument
+     * to either method, instead of creating a separate BufferedReader and having the first sections of each method be
+     * essentially identical
+     */
+
     /**Takes a scouting log and returns the match number present in the csv file
      *
      * @param file CSV file to read from
@@ -191,8 +197,9 @@ public class LoadActivity extends AppCompatActivity {
 
     }
 
-    /**Requests permission to access external storage, which is actually internal storage because android is retarded
-     * Calls onRequestPermissionsResult after, don't worry about arguments
+    /**Requests permission to access external storage, which is actually internal device storage 
+     * (external as in outside of the scope of the sandbox the application runs in).
+     * calls onRequestPermissionsResult after, don't worry about arguments
      */
     private void requestStoragePermission() {
         Log.i("A", "Write permission has NOT been granted. Requesting permission.");
@@ -244,7 +251,7 @@ public class LoadActivity extends AppCompatActivity {
                 Log.i("A", "Write permission was NOT granted.");
 
 
-                //If the user is AcOuStIc and denies permission, do this stuff ...oOo...
+                //If the user denies permission, do this stuff
 
             }
 
