@@ -39,19 +39,19 @@ public class MainActivity extends AppCompatActivity {
     //TODO : Add IO class
     //TODO : make not spaghetti code
 
-    boolean loadedFile = false;
+    private boolean m_loadedFile = false;
 
-    String loadName;
+    private String m_loadName;
 
-    ArrayList<String> strings = new ArrayList<String>(); //List of strings from fields
+    private ArrayList<String> m_strings = new ArrayList<String>(); //List of strings from fields
 
-    ArrayList<View> texts = new ArrayList<View>();
+    private ArrayList<View> m_texts = new ArrayList<View>();
 
-    static final int WRITE_LOG = 1; //Can be any value as long as it is different from other permission request codes
-    static final int MAKE_SETTINGS_DIRECTORY = 2;
+    public static final int WRITE_LOG = 1; //Can be any value as long as it is different from other permission request codes
+    public static final int MAKE_SETTINGS_DIRECTORY = 2;
 
-    TextView activityMessage;
-    Button saveButton;
+    private TextView m_activityMessage;
+    private Button m_saveButton;
 
     /** Launches when activity starts
      *
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        loadName = intent.getStringExtra(intent.EXTRA_TEXT); //Gets message from previous activity, stores in message string
+        m_loadName = intent.getStringExtra(intent.EXTRA_TEXT); //Gets message from previous activity, stores in message string
 
         //Load Settings
         readSettings();
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             if (!linearLayout.getChildAt(i).getTag().toString().equals("title")) {
-                texts.add(linearLayout.getChildAt(i));
+                m_texts.add(linearLayout.getChildAt(i));
             }
 
         }
@@ -102,20 +102,20 @@ public class MainActivity extends AppCompatActivity {
         ToggleButton defenseButton = (ToggleButton) findViewById(R.id.PlayedDefense);
         defenseButton.setChecked(false);
 
-        if (!(loadName == null)) {
+        if (!(m_loadName == null)) {
             String[] fields = null;
-            Log.i("A", "File recieved, loading" + loadName);
-            loadedFile = true;
-            File loadFile = new File(loadName);
+            Log.i("A", "File recieved, loading" + m_loadName);
+            m_loadedFile = true;
+            File loadFile = new File(m_loadName);
 
-            activityMessage = (TextView) findViewById(R.id.ActivityMessage);
-            saveButton = (Button) findViewById(R.id.SaveButton);
+            m_activityMessage = (TextView) findViewById(R.id.m_ActivityMessage);
+            m_saveButton = (Button) findViewById(R.id.m_SaveButton);
 
-            activityMessage.setText("Editing " + loadFile.getPath());
-            saveButton.setText("Overwrite");
+            m_activityMessage.setText("Editing " + loadFile.getPath());
+            m_saveButton.setText("Overwrite");
 
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(new File(loadName))); //Creates a file reader on the file passed to this activity by the load activity
+                BufferedReader reader = new BufferedReader(new FileReader(new File(m_loadName))); //Creates a file reader on the file passed to this activity by the load activity
 
                 String content = reader.readLine(); //Gets the content of the file
                 fields = content.split(","); //Splits content into fields
@@ -140,19 +140,19 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < fields.length; i++) {
 
-                    Log.i("A", "Setting " + texts.get(i).getId() + " to " + fields[i]);
-                    if (texts.get(i).getTag().toString().equals("text")) {
-                        ((EditText) texts.get(i)).setText(fields[i]);
-                    } else if (texts.get(i).getTag().toString().equals("bool")) {
-                        ((ToggleButton) texts.get(i)).setChecked(!fields[i].equals("false"));
-                    } else if (texts.get(i).getTag().toString().equals("radio")) {
-                        for (int j = 0; j < ((RadioGroup) texts.get(i)).getChildCount(); j++) {
-                            if (((TextView)((RadioGroup) texts.get(i)).getChildAt(j)).getText().toString().equals(fields[i])) {
-                                ((RadioButton)((RadioGroup) texts.get(i)).getChildAt(j)).setChecked(true);
+                    Log.i("A", "Setting " + m_texts.get(i).getId() + " to " + fields[i]);
+                    if (m_texts.get(i).getTag().toString().equals("text")) {
+                        ((EditText) m_texts.get(i)).setText(fields[i]);
+                    } else if (m_texts.get(i).getTag().toString().equals("bool")) {
+                        ((ToggleButton) m_texts.get(i)).setChecked(!fields[i].equals("false"));
+                    } else if (m_texts.get(i).getTag().toString().equals("radio")) {
+                        for (int j = 0; j < ((RadioGroup) m_texts.get(i)).getChildCount(); j++) {
+                            if (((TextView)((RadioGroup) m_texts.get(i)).getChildAt(j)).getText().toString().equals(fields[i])) {
+                                ((RadioButton)((RadioGroup) m_texts.get(i)).getChildAt(j)).setChecked(true);
                             }
                         }
-                    } else if (texts.get(i).getTag().toString().equals("addable")) {
-                        ((EditText) ((LinearLayout) texts.get(i)).getChildAt(0)).setText(fields[i]);
+                    } else if (m_texts.get(i).getTag().toString().equals("addable")) {
+                        ((EditText) ((LinearLayout) m_texts.get(i)).getChildAt(0)).setText(fields[i]);
                     }
 
                 }
@@ -171,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Other layout features
-        activityMessage = (TextView) findViewById(R.id.ActivityMessage);
+        m_activityMessage = (TextView) findViewById(R.id.m_ActivityMessage);
 
-        saveButton = (Button) findViewById(R.id.SaveButton);
+        m_saveButton = (Button) findViewById(R.id.m_SaveButton);
         Button sendButton = (Button) findViewById(R.id.SendButton);
         Button loadButton = (Button) findViewById(R.id.LoadButton);
         Button clearButton = (Button) findViewById(R.id.ClearButton);
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        m_saveButton.setOnClickListener(new View.OnClickListener() {
 
             /**This method is called when the save button is pushed
              *
@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SendMessageActivity.class);
         String message = updateStrings();
         intent.putExtra("MessageToSend", message);
-        if (loadedFile) {
-            intent.putExtra("LoadedFile", loadName);
+        if (m_loadedFile) {
+            intent.putExtra("LoadedFile", m_loadName);
         }
         startActivity(intent);
     }
@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
                 File home = new File(getApplicationInfo().dataDir + "/Logs"); //application directory, so: /data/data/com.whatever.otherstuff/Logs
                 home.mkdirs();
                 File csv;
-                if (!(loadName == null)) {
-                    csv = new File(loadName);
+                if (!(m_loadName == null)) {
+                    csv = new File(m_loadName);
                 } else {
                     csv = null;
 
@@ -330,10 +330,10 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-                    loadName = csv.getAbsolutePath();
-                    loadedFile = true;
-                    activityMessage.setText("Editing " + new File(loadName).getPath());
-                    saveButton.setText("Overwrite");
+                    m_loadName = csv.getAbsolutePath();
+                    m_loadedFile = true;
+                    m_activityMessage.setText("Editing " + new File(m_loadName).getPath());
+                    m_saveButton.setText("Overwrite");
 
                     Log.i("A", "File created at " + csv.getAbsolutePath() + "");
 
@@ -347,19 +347,19 @@ public class MainActivity extends AppCompatActivity {
                     writer.close();
 
                     Log.i("A", "Finished writing to " + csv.getAbsolutePath() + "");
-                    activityMessage.setText("CSV File Saved");
+                    m_activityMessage.setText("CSV File Saved");
 
                 } catch (IOException e) {
                     //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
                     Log.i("A", "File write to " + csv.getAbsolutePath() + " failed");
-                    activityMessage.setText("CSV File Save Failed");
+                    m_activityMessage.setText("CSV File Save Failed");
                     e.printStackTrace();
                 }
 
             } else {
                 Log.i("A", "Write permission was NOT granted.");
 
-                activityMessage.setText("CSV File Save Failed, Permission Error");
+                m_activityMessage.setText("CSV File Save Failed, Permission Error");
 
                 //If the user denies permission, do this stuff
 
@@ -389,22 +389,22 @@ public class MainActivity extends AppCompatActivity {
 
     public String updateStrings() {
 
-        strings.clear();
-        for (View e : texts) {
+        m_strings.clear();
+        for (View e : m_texts) {
             if (e.getTag().toString().equals("text")) {
-                strings.add(((EditText)e).getText().toString().replace(' ', '_').replace(',', '.'));
+                m_strings.add(((EditText)e).getText().toString().replace(' ', '_').replace(',', '.'));
             } else if (e.getTag().toString().equals("bool")) {
-                strings.add(Boolean.toString(((ToggleButton) e).isChecked()));
+                m_strings.add(Boolean.toString(((ToggleButton) e).isChecked()));
             } else if (e.getTag().toString().equals("radio")) {
-                strings.add(((RadioButton) findViewById(((RadioGroup) e).getCheckedRadioButtonId())).getText().toString());
+                m_strings.add(((RadioButton) findViewById(((RadioGroup) e).getCheckedRadioButtonId())).getText().toString());
             } else if (e.getTag().toString().equals("addable")) {
-                strings.add(((EditText) ((LinearLayout) e).getChildAt(0)).getText().toString());
+                m_strings.add(((EditText) ((LinearLayout) e).getChildAt(0)).getText().toString());
             }
         }
 
         StringBuilder builder = new StringBuilder();
 
-        for (String s : strings) {
+        for (String s : m_strings) {
             builder.append(s + ",");
         }
 
@@ -415,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
     public void clear() {
 
         //Clears fields
-        for (View e : texts) {
+        for (View e : m_texts) {
             if (e.getTag().toString().equals("text")) {
                 ((EditText) e).setText("");
             } else if (e.getTag().toString().equals("bool")) {
@@ -432,15 +432,15 @@ public class MainActivity extends AppCompatActivity {
 
         updateStrings();
 
-        loadedFile = false;
+        m_loadedFile = false;
 
-        loadName = null;
+        m_loadName = null;
 
-        activityMessage = (TextView) findViewById(R.id.ActivityMessage);
-        saveButton = (Button) findViewById(R.id.SaveButton);
+        m_activityMessage = (TextView) findViewById(R.id.m_ActivityMessage);
+        m_saveButton = (Button) findViewById(R.id.m_SaveButton);
 
-        activityMessage.setText("Editing New Scouting Log");
-        saveButton.setText("Save");
+        m_activityMessage.setText("Editing New Scouting Log");
+        m_saveButton.setText("Save");
 
     }
 

@@ -43,33 +43,31 @@ public class SendMessageActivity extends AppCompatActivity {
 
     //TODO : Take connect off of ui thread
 
-    public static BluetoothSocket socket;
+    private BluetoothSocket m_socket;
 
-    BluetoothDevice hostComputer;
-    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();;
+    private BluetoothDevice m_hostComputer;
+    private BluetoothAdapter m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();;
 
-    private OutputStream outputStream; //Stream data is written to
-    private InputStream inStream; //Stream data is read from, currently unused
+    private OutputStream m_outputStream; //Stream data is written to
+    private InputStream m_inStream; //Stream data is read from, currently unused
 
-    File fileToSend = null;
+    private File m_fileToSend = null;
 
-    String computerAddress = "3C:F8:62:C5:8D:C4";
-    final String stringUUID = "39675b0d-6dd8-4622-847f-3e5acc607e27";
-    UUID ConnectToUUID = UUID.fromString(stringUUID);
+    private String m_computerAddress = "3C:F8:62:C5:8D:C4";
+    private final String UUID_STRING = "39675b0d-6dd8-4622-847f-3e5acc607e27";
+    private UUID m_connectToUUID = UUID.fromString(UUID_STRING);
 
-    boolean connected = false;
+    private boolean m_connected = false;
 
     String message;
 
-    EditText connectionMAC;
-    TextView connectionInfo;
-    ToggleButton saveButton, sendSavedButton;
-    Button sendButton;
-    ProgressBar sendingBar;
+    private EditText m_connectionMAC;
+    private TextView m_connectionInfo;
+    private ToggleButton m_saveButton, m_sendSavedButton;
+    private Button m_sendButton;
+    private ProgressBar m_sendingBar;
 
-    boolean sending = false;
-
-
+    private boolean m_sending = false;
 
     /** Launches when activity starts
      *
@@ -87,38 +85,38 @@ public class SendMessageActivity extends AppCompatActivity {
         String loadName = intent.getStringExtra("LoadedFile"); //Gets name of loaded file if it exists
         final boolean loadedFile = (!(loadName == null));//Finds out if the file is loaded
         if (loadedFile) {
-            fileToSend = new File(loadName);
+            m_fileToSend = new File(loadName);
         }
 
-        connectionMAC = (EditText) findViewById(R.id.MacText);
-        connectionMAC.setText(computerAddress);
+        m_connectionMAC = (EditText) findViewById(R.id.MacText);
+        m_connectionMAC.setText(m_computerAddress);
 
-        connectionInfo = (TextView) findViewById(R.id.EsablishingConnection);
-        connectionInfo.setText("Not Connected");
+        m_connectionInfo = (TextView) findViewById(R.id.EsablishingConnection);
+        m_connectionInfo.setText("Not Connected");
 
         final TextView messageInfo = (TextView) findViewById(R.id.ActivityMessage);
         messageInfo.setText(message);
 
-        sendingBar = (ProgressBar) findViewById(R.id.Sending);
-        sendingBar.setVisibility(View.INVISIBLE);
+        m_sendingBar = (ProgressBar) findViewById(R.id.Sending);
+        m_sendingBar.setVisibility(View.INVISIBLE);
 
-        saveButton = (ToggleButton) findViewById(R.id.SaveOnSend);
-        saveButton.setChecked(true);
+        m_saveButton = (ToggleButton) findViewById(R.id.SaveOnSend);
+        m_saveButton.setChecked(true);
 
-        sendSavedButton = (ToggleButton) findViewById(R.id.SendSaved);
+        m_sendSavedButton = (ToggleButton) findViewById(R.id.SendSaved);
 
         final TextView saveOnSendDescription = (TextView) findViewById(R.id.SaveOnSendDescription);
 
         if (loadedFile) {
             Log.i("A", "The file to be sent was loaded");
-            saveButton.setVisibility(View.INVISIBLE);
+            m_saveButton.setVisibility(View.INVISIBLE);
             saveOnSendDescription.setVisibility(View.INVISIBLE);
-            saveButton.setChecked(false);
+            m_saveButton.setChecked(false);
         }
 
-        sendButton = (Button) findViewById(R.id.SendButton);
+        m_sendButton = (Button) findViewById(R.id.SendButton);
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        m_sendButton.setOnClickListener(new View.OnClickListener() {
 
 
             /**
@@ -127,9 +125,9 @@ public class SendMessageActivity extends AppCompatActivity {
              * @param v ignore this, android handles this variable automatically
              */
             public void onClick(View v) {
-                sendingBar.setVisibility(View.VISIBLE);
-                sendButton.setVisibility(View.INVISIBLE);
-                connectionInfo.setText("Sending Message");
+                m_sendingBar.setVisibility(View.VISIBLE);
+                m_sendButton.setVisibility(View.INVISIBLE);
+                m_connectionInfo.setText("Sending Message");
                 sendMessage();
             }
 
@@ -138,8 +136,8 @@ public class SendMessageActivity extends AppCompatActivity {
     }
 
     void sendMessage() {
-        if (!sending) {
-            sending = true;
+        if (!m_sending) {
+            m_sending = true;
             new Thread(
                     new Runnable() {
                         public void run() {
@@ -153,13 +151,13 @@ public class SendMessageActivity extends AppCompatActivity {
                                 Log.i("A", "Error Waiting");
                             }
 
-                            if (connected) {
+                            if (m_connected) {
                                 try {
-                                    if (!sendSavedButton.isChecked()) {
+                                    if (!m_sendSavedButton.isChecked()) {
                                         write("" + message + "\n");
                                     }
 
-                                    if (sendSavedButton.isChecked()) {
+                                    if (m_sendSavedButton.isChecked()) {
 
                                         //if the send saved option is selected
 
@@ -177,7 +175,7 @@ public class SendMessageActivity extends AppCompatActivity {
                                         write(toSend.toString());
                                     }
 
-                                    if (saveButton.isChecked()) {
+                                    if (m_saveButton.isChecked()) {
 
                                         //if the save on send option is selected, get storage permission
                                         requestStoragePermission();
@@ -185,7 +183,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
                                     runOnUiThread(new Runnable() {
                                         public void run() {
-                                            connectionInfo.setText("Sending Message");
+                                            m_connectionInfo.setText("Sending Message");
                                         }
                                     });
 
@@ -193,7 +191,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
                                     runOnUiThread(new Runnable() {
                                         public void run() {
-                                            connectionInfo.setText("Message Sent");
+                                            m_connectionInfo.setText("Message Sent");
                                         }
                                     });
 
@@ -208,7 +206,7 @@ public class SendMessageActivity extends AppCompatActivity {
                                     //lambda here to maintain compatibility with older versions of android
                                     Runnable showCancelAlert = new Runnable() {
                                         public void run() {
-                                            connectionInfo.setText("Error Sending Message");
+                                            m_connectionInfo.setText("Error Sending Message");
                                             AlertDialog.Builder builder = new AlertDialog.Builder(SendMessageActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                                             builder.setMessage("The Message Failed To Send. Please Try Again.").setTitle("Not Sent").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 @Override
@@ -227,27 +225,27 @@ public class SendMessageActivity extends AppCompatActivity {
                                     };
 
                                     if (!received) {
-                                        //Shows error sending alert if does not receive acknowledgement from server
+                                        //Shows error m_sending alert if does not receive acknowledgement from server
                                         Log.i("A", "Error Sending Message");
                                         runOnUiThread(showCancelAlert);
                                     }
 
-                                    socket.close();
+                                    m_socket.close();
                                 } catch (IOException e) {
                                     //Shows error alert because of IOException
                                     Log.i("A", "Error Sending Message");
                                     runOnUiThread(showCancelAlert);
                                     e.printStackTrace();
                                 }
-                                connected = false;
+                                m_connected = false;
                             }
                             runOnUiThread(new Runnable() {
                                 public void run() {
-                                    sendingBar.setVisibility(View.INVISIBLE);
-                                    sendButton.setVisibility(View.VISIBLE);
+                                    m_sendingBar.setVisibility(View.INVISIBLE);
+                                    m_sendButton.setVisibility(View.VISIBLE);
                                 }
                             });
-                            sending = false;
+                            m_sending = false;
                         }
                     }).start();
         }
@@ -255,11 +253,11 @@ public class SendMessageActivity extends AppCompatActivity {
 
     public void connect() {
         //When the connect button is pushed
-        if (!connected) {
-            computerAddress = connectionMAC.getText().toString();
+        if (!m_connected) {
+            m_computerAddress = m_connectionMAC.getText().toString();
             runOnUiThread(new Runnable() {
                 public void run() {
-                    connectionInfo.setText("Connecting...");
+                    m_connectionInfo.setText("Connecting...");
                 }
             });
             try {
@@ -267,16 +265,16 @@ public class SendMessageActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (connected) {
+            if (m_connected) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        connectionInfo.setText("Connected");
+                        m_connectionInfo.setText("Connected");
                     }
                 });
             } else {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        connectionInfo.setText("Error: Connection Failed. Do You Have The Right MAC Address?");
+                        m_connectionInfo.setText("Error: Connection Failed. Do You Have The Right MAC Address?");
                         AlertDialog.Builder builder = new AlertDialog.Builder(SendMessageActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                         builder.setMessage("The Message Failed To Send. Please Try Again.").setTitle("Not Sent").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
@@ -309,7 +307,7 @@ public class SendMessageActivity extends AppCompatActivity {
         try {
             byte[] bytes = new byte[3];
             Log.i("A", "Checking For End");
-            int bytesRead = inStream.read(bytes, 0, bytes.length);
+            int bytesRead = m_inStream.read(bytes, 0, bytes.length);
             String recieved = new String(bytes, "UTF-8");
 
             if (recieved.equals("end")) { //check if the message is end
@@ -335,7 +333,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
         int REQUEST_ENABLE_BT = 1;
 
-        if (mBluetoothAdapter == null) {
+        if (m_bluetoothAdapter == null) {
             /* Device doesn't support Bluetooth
             app currently crashes if this is true, put error handling code in here
 
@@ -343,20 +341,20 @@ public class SendMessageActivity extends AppCompatActivity {
              */
         }
 
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (!m_bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT); //Enables bluetooth, gets permissions
         }
 
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = m_bluetoothAdapter.getBondedDevices();
 
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
                 String deviceHardwareAddress = device.getAddress(); // MAC addresses of paired devices
 
-                if (device.getAddress().toString().equals(computerAddress)) {
-                    hostComputer = device;
+                if (device.getAddress().toString().equals(m_computerAddress)) {
+                    m_hostComputer = device;
                 }
 
 
@@ -365,15 +363,15 @@ public class SendMessageActivity extends AppCompatActivity {
         }
 
         try {
-            if (!(hostComputer == null)) {
-                socket = hostComputer.createRfcommSocketToServiceRecord(ConnectToUUID);
-                socket.connect();
-                connected = true;
-                outputStream = socket.getOutputStream();
-                inStream = socket.getInputStream();
-                write(mBluetoothAdapter.getName().toString());
+            if (!(m_hostComputer == null)) {
+                m_socket = m_hostComputer.createRfcommSocketToServiceRecord(m_connectToUUID);
+                m_socket.connect();
+                m_connected = true;
+                m_outputStream = m_socket.getOutputStream();
+                m_inStream = m_socket.getInputStream();
+                write(m_bluetoothAdapter.getName().toString());
             } else {
-                connected = false;
+                m_connected = false;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -387,7 +385,7 @@ public class SendMessageActivity extends AppCompatActivity {
      * @throws IOException
      */
     public void write(String s) throws IOException {
-        outputStream.write(s.getBytes());
+        m_outputStream.write(s.getBytes());
     }
 
     /**Requests permission to access external storage, which is actually internal device storage 

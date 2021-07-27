@@ -25,10 +25,10 @@ public class LoadActivity extends AppCompatActivity {
     //TODO : add image to file icon radiobutton thing
 
     //Stuff for updating selected files
-    static int selected; //the selected radiobutton
-    static File[] existingFiles;
-    RadioGroup filesGroup;
-    ArrayList<RadioButton> fileButtons;
+    private int m_selected; //the selected radiobutton
+    private File[] m_existingFiles;
+    private RadioGroup m_filesGroup;
+    private ArrayList<RadioButton> m_fileButtons;
 
     /** Run when the activity is launched
      *
@@ -57,16 +57,16 @@ public class LoadActivity extends AppCompatActivity {
                 //Launches main activity with file loaded
                 Log.i("A", "Commencing load");
 
-                if (existingFiles.length > 0) {
+                if (m_existingFiles.length > 0) {
 
                     for (int i = 0; i < ((RadioGroup) findViewById(R.id.Files)).getChildCount(); i++) {
                         if (((RadioButton) ((RadioGroup) findViewById(R.id.Files)).getChildAt(i)).isChecked()) {
-                            selected = i;
-                            Log.i("A", selected + " is selected: " + existingFiles[selected]);
+                            m_selected = i;
+                            Log.i("A", selected + " is selected: " + m_existingFiles[m_selected]);
                         }
                     }
 
-                    loadFile(existingFiles[selected]);
+                    loadFile(m_existingFiles[m_selected]);
 
 
                 } else {
@@ -98,12 +98,12 @@ public class LoadActivity extends AppCompatActivity {
 
                 for (int i = 0; i < ((RadioGroup) findViewById(R.id.Files)).getChildCount(); i++) {
                     if (((RadioButton) ((RadioGroup) findViewById(R.id.Files)).getChildAt(i)).isChecked()) {
-                        selected = i;
-                        Log.i("A", selected + " is selected: " + existingFiles[selected]);
+                        m_selected = i;
+                        Log.i("A", selected + " is selected: " + m_existingFiles[m_selected]);
                     }
                 }
 
-                if (existingFiles.length > 0) {
+                if (m_existingFiles.length > 0) {
                     Log.i("A", "Requesting permissions");
                     requestStoragePermission();
                 } else {
@@ -239,7 +239,7 @@ public class LoadActivity extends AppCompatActivity {
 
 
                 //Deletes file
-                if(existingFiles[selected].delete()) {
+                if(m_existingFiles[m_selected].delete()) {
                     Log.i("A", "File deleted");
                 } else {
                     Log.i("A", "Delete failed");
@@ -267,28 +267,28 @@ public class LoadActivity extends AppCompatActivity {
     public void updateFiles() {
         //Scroll View Stuff
 
-        filesGroup = (RadioGroup) findViewById(R.id.Files); //Radiogroup containing all files to be displayed in scroll view
-        fileButtons = new ArrayList<RadioButton>(); //Arraylist containing all Radiobuttons to be added to filesGroup
-        existingFiles = new File(getApplicationInfo().dataDir + "/Logs").listFiles(); //List of saved scouting logs
+        m_filesGroup = (RadioGroup) findViewById(R.id.Files); //Radiogroup containing all files to be displayed in scroll view
+        m_fileButtons = new ArrayList<RadioButton>(); //Arraylist containing all Radiobuttons to be added to m_filesGroup
+        m_existingFiles = new File(getApplicationInfo().dataDir + "/Logs").listFiles(); //List of saved scouting logs
 
-        filesGroup.removeAllViews();
+        m_filesGroup.removeAllViews();
 
-        if (!(existingFiles == null) && (existingFiles.length > 0) && new File(getApplicationInfo().dataDir + "/Logs").exists()) { //Makes sure there are no errors
-            for (int i = 0; i < existingFiles.length; i++) {
+        if (!(m_existingFiles == null) && (m_existingFiles.length > 0) && new File(getApplicationInfo().dataDir + "/Logs").exists()) { //Makes sure there are no errors
+            for (int i = 0; i < m_existingFiles.length; i++) {
 
                 RadioButton file = new RadioButton(this); //Creates a new radiobutton
 
                 file.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT)); //Sets layout parameters for radiobutton
 
-                file.setText((i+1) + " - Match " + getMatchNumber(existingFiles[i]).replace('_', ' ') + ", Team " + getTeamNumber(existingFiles[i]).replace('_', ' ')); //Sets text for radiobutton
+                file.setText((i+1) + " - Match " + getMatchNumber(m_existingFiles[i]).replace('_', ' ') + ", Team " + getTeamNumber(m_existingFiles[i]).replace('_', ' ')); //Sets text for radiobutton
 
-                fileButtons.add(file); //adds file to fileButtons arraylist
+                m_fileButtons.add(file); //adds file to m_fileButtons arraylist
 
-                filesGroup.addView(fileButtons.get(i)); //adds arraylist content to radiogroup
+                m_filesGroup.addView(m_fileButtons.get(i)); //adds arraylist content to radiogroup
             }
 
-            if (filesGroup.getChildCount() > 0) {
-                ((RadioButton) filesGroup.getChildAt(0)).setChecked(true);
+            if (m_filesGroup.getChildCount() > 0) {
+                ((RadioButton) m_filesGroup.getChildAt(0)).setChecked(true);
             }
 
         }
