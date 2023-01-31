@@ -17,7 +17,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AlphaDogs"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
         <activity
             android:name=".SendMessageActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -37,7 +37,7 @@
         <activity
             android:name=".LoadActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
