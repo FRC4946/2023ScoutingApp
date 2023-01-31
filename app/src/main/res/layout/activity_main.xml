@@ -4,210 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#262626"
     tools:context="com.example.jacob.bluetoothtest.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/trenches"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/targets"
-        app:layout_constraintEnd_toEndOf="@id/targets"
-        app:layout_constraintStart_toStartOf="@id/targets"
-        app:layout_constraintTop_toTopOf="@id/targets">
-
-        <Button
-            android:id="@+id/redTrench"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:alpha="0" />
-
-        <Button
-            android:id="@+id/shieldGenerator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:alpha="0" />
-
-        <Button
-            android:id="@+id/blueTrench"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:alpha="0" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/targets"
+    <TextView
+        android:id="@+id/teamInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/field"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <Button
-            android:id="@+id/blueTarget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:alpha="0" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3.5" />
-
-        <Button
-            android:id="@+id/redTarget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:alpha="0" />
-
-    </LinearLayout>
+        android:gravity="center"
+        android:text="Red - 1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/redTeam"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteY="58dp" />
 
     <LinearLayout
-        android:id="@+id/modeShelf"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/shelfColor"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/gameMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/auto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonSelectedColor"
-                android:enabled="false"
-                android:text="Auto"
-                android:textColor="@color/blueTeam" />
-
-            <Button
-                android:id="@+id/teleop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonNotSelectedColor"
-                android:text="Teleop"
-                android:textColor="@color/redTeam" />
-
-            <Button
-                android:id="@+id/endgame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonNotSelectedColor"
-                android:text="Endgame"
-                android:textColor="@color/greenColor" />
-        </LinearLayout>
-
-        <ToggleButton
-            android:id="@+id/autoLine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="No Cross Auto Line"
-            android:textOn="Crossed Auto Line" />
-
-        <LinearLayout
-            android:id="@+id/defenceMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/offence"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonSelectedColor"
-                android:text="Offence"
-                android:textColor="@color/redTeam" />
-
-            <Button
-                android:id="@+id/defence"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonNotSelectedColor"
-                android:text="Defence"
-                android:textColor="@color/greenColor" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/defenceType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/defending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonSelectedColor"
-                android:text="Defending"
-                android:textColor="@color/greenColor" />
-
-            <Button
-                android:id="@+id/idle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/buttonNotSelectedColor"
-                android:text="Idle"
-                android:textColor="@color/blueTeam" />
-        </LinearLayout>
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/toggleMatch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Match" />
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginVertical="50dp"
+            android:layout_weight="0"
+            android:background="@drawable/whitebutton"
+            android:padding="30dp"
+            android:text="Start Match"
+            android:textColor="#434343" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical"
+        android:layout_marginVertical="50dp"
+        android:layout_marginHorizontal="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/redbutton"
                 android:text="Send" />
 
             <Button
                 android:id="@+id/newForm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/redbutton"
                 android:text="New" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -219,35 +86,22 @@
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/redbutton"
                 android:text="Save" />
 
             <Button
                 android:id="@+id/load"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/redbutton"
                 android:text="Load" />
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/teamInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Red - 1"
-            android:textColor="@color/redTeam" />
-
     </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/shelfButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/shelfColor"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@id/targets"
-        app:layout_constraintStart_toEndOf="@id/modeShelf"
-        app:layout_constraintTop_toTopOf="@id/targets"
-        app:layout_constraintVertical_bias="0.23000002"
-        app:srcCompat="@drawable/ic_threelines" />
 </android.support.constraint.ConstraintLayout>
