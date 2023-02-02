@@ -1,7 +1,6 @@
 package com.example.jacob.bluetoothtest;
 
 import android.graphics.ColorFilter;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
@@ -83,6 +82,11 @@ public class MatchActivity extends AppCompatActivity {
             m_autoButton.setBackground(autoButtonBackground);
             m_teleopButton.setBackground(defaultButtonBackground);
             m_endgameButton.setBackground(defaultButtonBackground);
+
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_placeholder, AutoFragment.newInstance(m_currentForm))
+                    .commit();
         } else if (gameMode == Constants.GameMode.TELEOP) {
             Drawable teleopButtonBackground = getResources().getDrawable(R.drawable.rounded_button);
             ColorFilter teleopButtonTint = new PorterDuffColorFilter(getResources().getColor(R.color.purpleColor), PorterDuff.Mode.MULTIPLY);
@@ -91,6 +95,11 @@ public class MatchActivity extends AppCompatActivity {
             m_autoButton.setBackground(defaultButtonBackground);
             m_teleopButton.setBackground(teleopButtonBackground);
             m_endgameButton.setBackground(defaultButtonBackground);
+
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_placeholder, TeleopFragment.newInstance(m_currentForm))
+                    .commit();
         } else {
             Drawable endgameButtonBackground = getResources().getDrawable(R.drawable.rounded_button);
             ColorFilter endgameButtonTint = new PorterDuffColorFilter(getResources().getColor(R.color.greenColor), PorterDuff.Mode.MULTIPLY);
@@ -99,6 +108,11 @@ public class MatchActivity extends AppCompatActivity {
             m_autoButton.setBackground(defaultButtonBackground);
             m_teleopButton.setBackground(defaultButtonBackground);
             m_endgameButton.setBackground(endgameButtonBackground);
+
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_placeholder, EndgameFragment.newInstance(m_currentForm))
+                    .commit();
         }
 
         updateActionBar();

@@ -37,4 +37,6 @@
     <string name="auto">Auto</string>
     <string name="teleop">Tele-op</string>
     <string name="endgame">Endgame</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
