@@ -29,9 +29,12 @@
     <string name="text">text</string>
     <string name="bool">bool</string>
     <string name="radio">radio</string>
-    <string name="title" >title</string>
+    <string name="title">title</string>
     <string name="addable">addable</string>
     <string name="affirm">OK</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="auto">Auto</string>
+    <string name="teleop">Tele-op</string>
+    <string name="endgame">Endgame</string>
 </resources>

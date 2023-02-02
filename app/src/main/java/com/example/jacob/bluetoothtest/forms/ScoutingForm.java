@@ -2,9 +2,10 @@ package com.example.jacob.bluetoothtest.forms;
 
 import com.example.jacob.bluetoothtest.Constants;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ScoutingForm {
+public class ScoutingForm implements Serializable {
     public boolean crossedAutoLine = false;
 
     public Constants.Team team = Constants.Team.RED;

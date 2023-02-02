@@ -1,6 +1,8 @@
 package com.example.jacob.bluetoothtest.forms;
 
-public class TimePeriod {
+import java.io.Serializable;
+
+public class TimePeriod implements Serializable {
 
     private long m_startTime = 0;
     private long m_endTime = 0;

@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 m_currentForm.matchStarted = true;
                 m_currentForm.currentMode = Constants.GameMode.AUTO;
-                Intent intent = new Intent(MainActivity.this, LoadActivity.class);
+                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
+                intent.putExtra("SCOUTING_FORM", m_currentForm);
                 startActivity(intent);
             }
         });

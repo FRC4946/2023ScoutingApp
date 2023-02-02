@@ -6,7 +6,10 @@
     <color name="accent_material_dark_1">#AD0000</color>
     <color name="redTeam">#E73C37</color>
     <color name="blueTeam">#657ED4</color>
-    <color name="greenColor">#4CAF50</color>
+    <color name="greenColor">#97F181</color>
+    <color name="orangeColor">#FFC36E</color>
+    <color name="purpleColor">#E8AAFD</color>
+    <color name="navyBlue">#040F3C</color>
     <color name="shelfColor">#A5A5A5</color>
     <color name="iconColor">#DADADA</color>
     <color name="buttonSelectedColor">#666666</color>
