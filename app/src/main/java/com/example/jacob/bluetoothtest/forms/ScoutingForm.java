@@ -6,8 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ScoutingForm implements Serializable {
-    public boolean crossedAutoLine = false;
-
     public Constants.Team team = Constants.Team.RED;
 
     public int teamNumber = 1;
@@ -23,25 +21,38 @@ public class ScoutingForm implements Serializable {
     public boolean matchOver = false;
     public boolean matchStarted = false;
 
-    public TimePeriod climbPeriod = new TimePeriod();
-    public ArrayList<TimePeriod> defenceTimes = new ArrayList<TimePeriod>();
-    public ArrayList<TimePeriod> activeDefenceTimes = new ArrayList<TimePeriod>();
+    // public TimePeriod climbPeriod = new TimePeriod();
+    // public ArrayList<TimePeriod> defenceTimes = new ArrayList<TimePeriod>();
+    // public ArrayList<TimePeriod> activeDefenceTimes = new ArrayList<TimePeriod>();
 
-    public double defenceTime = 0;
-    public double activeDefenceTime = 0;
-    public double climbTime = 0;
-
-    public int trenchBalls = 0;
-    public int trenchBallsShot = 0;
-    public int fieldBalls = 0;
-    public int fieldBallsShot = 0;
-    public int targetBalls = 0;
-    public int targetBallsShot = 0;
-
-    public int autoBalls = 0;
-    public int autoBallsShot = 0;
-
-    public Constants.Climb climb = Constants.Climb.NONE;
+    public boolean leftCommunity = false;
+    public int autoConesTop = 0;
+    public int autoConesMid = 0;
+    public int autoConesBot = 0;
+    public int autoCubesTop = 0;
+    public int autoCubesMid = 0;
+    public int autoCubesBot = 0;
+    public int conesTop = 0;
+    public int conesMid = 0;
+    public int conesBot = 0;
+    public int cubesTop = 0;
+    public int cubesMid = 0;
+    public int cubesBot = 0;
+    public boolean autoDocked = false;
+    public boolean autoEngaged = false;
+    public boolean docked = false;
+    public boolean engaged = false;
+    public boolean park = false;
+    public double endgameTime = 0.0;
+    public int opponentA = 0;
+    public ArrayList<TimePeriod> defenceATimes = new ArrayList<TimePeriod>();
+    public double opponentADefenceTime = 0.0;
+    public int opponentB = 0;
+    public ArrayList<TimePeriod> defenceBTimes = new ArrayList<TimePeriod>();
+    public double opponentBDefenceTime = 0.0;
+    public int opponentC = 0;
+    public ArrayList<TimePeriod> defenceCTimes = new ArrayList<TimePeriod>();
+    public double opponentCDefenceTime = 0.0;
 
     private boolean m_finalized = false;
 
@@ -50,18 +61,16 @@ public class ScoutingForm implements Serializable {
     }
 
     public void complete() {
+        /*
         if (defenceTimes.size() > 0) {
             defenceTimes.get(defenceTimes.size() - 1).tryEnd();
         }
-        if (activeDefenceTimes.size() > 0) {
-            activeDefenceTimes.get(activeDefenceTimes.size() - 1).tryEnd();
-        }
         defenceTime = TimePeriod.millisToSeconds(getTimeListSum(defenceTimes));
-        activeDefenceTime = TimePeriod.millisToSeconds(getTimeListSum(activeDefenceTimes));
         if (!climbPeriod.ended()) {
             climbPeriod = new TimePeriod();
         }
         climbTime = climbPeriod.getDurationSeconds();
+         */
         m_finalized = true;
     }
 
@@ -75,19 +84,31 @@ public class ScoutingForm implements Serializable {
                 + team + ","
                 + matchNumber + ","
                 + scoutName + ","
-                + (crossedAutoLine ? "True" : "False") + ","
-                + autoBalls + ","
-                + autoBallsShot + ","
-                + trenchBalls + ","
-                + trenchBallsShot + ","
-                + fieldBalls + ","
-                + fieldBallsShot + ","
-                + targetBalls + ","
-                + targetBallsShot + ","
-                + activeDefenceTime + ","
-                + defenceTime + ","
-                + climbTime + ","
-                + climb;
+                + (leftCommunity ? "True" : "False") + ","
+                + autoConesTop + ","
+                + autoConesMid + ","
+                + autoConesBot + ","
+                + autoCubesTop + ","
+                + autoCubesMid + ","
+                + autoCubesBot + ","
+                + conesTop + ","
+                + conesMid + ","
+                + conesBot + ","
+                + cubesTop + ","
+                + cubesMid + ","
+                + cubesBot + ","
+                + (autoDocked ? "True" : "False") + ","
+                + (autoEngaged ? "True" : "False") + ","
+                + (docked ? "True" : "False") + ","
+                + (engaged ? "True" : "False") + ","
+                + (park ? "True" : "False") + ","
+                + endgameTime + ","
+                + opponentA + ","
+                + opponentADefenceTime + ","
+                + opponentB + ","
+                + opponentBDefenceTime + ","
+                + opponentC + ","
+                + opponentCDefenceTime + ",";
     }
 
     public static ScoutingForm fromString(String s) {
@@ -100,20 +121,31 @@ public class ScoutingForm implements Serializable {
         ret.team = Constants.Team.fromString(arr[1]);
         ret.matchNumber = Integer.parseInt(arr[2]);
         ret.scoutName = arr[3];
-        ret.crossedAutoLine = "True".equals(arr[4]);
-        ret.autoBalls = Integer.parseInt(arr[5]);
-        ret.autoBallsShot = Integer.parseInt(arr[6]);
-        ret.trenchBalls = Integer.parseInt(arr[7]);
-        ret.trenchBallsShot = Integer.parseInt(arr[8]);
-        ret.fieldBalls = Integer.parseInt(arr[9]);
-        ret.fieldBallsShot = Integer.parseInt(arr[10]);
-        ret.targetBalls = Integer.parseInt(arr[11]);
-        ret.targetBallsShot = Integer.parseInt(arr[12]);
-        ret.activeDefenceTime = Double.parseDouble(arr[13]);
-        ret.defenceTime = Double.parseDouble(arr[14]);
-        ret.climbTime = Double.parseDouble(arr[15]);
-        ret.climb = Constants.Climb.fromString(arr[16]);
-
+        ret.leftCommunity = "True".equals(arr[4]);
+        ret.autoConesTop = Integer.parseInt(arr[5]);
+        ret.autoConesMid = Integer.parseInt(arr[6]);
+        ret.autoConesBot = Integer.parseInt(arr[7]);
+        ret.autoCubesTop = Integer.parseInt(arr[8]);
+        ret.autoCubesMid = Integer.parseInt(arr[9]);
+        ret.autoCubesBot = Integer.parseInt(arr[10]);
+        ret.conesTop = Integer.parseInt(arr[11]);
+        ret.conesMid = Integer.parseInt(arr[12]);
+        ret.conesBot = Integer.parseInt(arr[13]);
+        ret.cubesTop = Integer.parseInt(arr[14]);
+        ret.cubesMid = Integer.parseInt(arr[15]);
+        ret.cubesBot = Integer.parseInt(arr[16]);
+        ret.autoDocked = "True".equals(arr[17]);
+        ret.autoEngaged = "True".equals(arr[18]);
+        ret.docked = "True".equals(arr[19]);
+        ret.engaged = "True".equals(arr[20]);
+        ret.park = "True".equals(arr[21]);
+        ret.endgameTime = Double.parseDouble(arr[22]);
+        ret.opponentA = Integer.parseInt(arr[23]);
+        ret.opponentADefenceTime = Double.parseDouble(arr[24]);
+        ret.opponentB = Integer.parseInt(arr[25]);
+        ret.opponentBDefenceTime = Double.parseDouble(arr[26]);
+        ret.opponentC = Integer.parseInt(arr[27]);
+        ret.opponentCDefenceTime = Double.parseDouble(arr[28]);
         ret.matchStarted = true;
         ret.matchOver = true;
 
