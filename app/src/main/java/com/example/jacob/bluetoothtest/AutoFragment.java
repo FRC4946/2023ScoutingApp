@@ -35,7 +35,6 @@ public class AutoFragment extends Fragment {
     private TextView m_topConeCount, m_topCubeCount, m_midConeCount, m_midCubeCount, m_botConeCount, m_botCubeCount;
     private CheckBox m_leftCommunitySwitch, m_dockedSwitch, m_engagedSwitch;
     private TextView m_leftCommunityText, m_dockedText, m_engagedText;
-    private LinearLayout m_topRowBorder, m_midRowBorder, m_botRowBorder;
 
     public AutoFragment() {
         // Required empty public constructor
@@ -88,9 +87,6 @@ public class AutoFragment extends Fragment {
         m_leftCommunityText = view.findViewById(R.id.left_community_text);
         m_dockedText = view.findViewById(R.id.docked_text);
         m_engagedText = view.findViewById(R.id.engaged_text);
-        m_topRowBorder = view.findViewById(R.id.top_row_border);
-        m_midRowBorder = view.findViewById(R.id.mid_row_border);
-        m_botRowBorder = view.findViewById(R.id.bot_row_border);
 
         updateCounts();
         updateSwitches();
