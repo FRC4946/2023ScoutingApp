@@ -1,14 +1,18 @@
 package com.example.jacob.bluetoothtest;
 
+import android.content.DialogInterface;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -32,7 +36,6 @@ public class MatchActivity extends AppCompatActivity {
 
         // Action Bar stuff
         m_actionBar = getSupportActionBar();
-        m_actionBar.setDisplayHomeAsUpEnabled(true);
         int teamColor = (m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
         m_actionBar.setBackgroundDrawable(new ColorDrawable(teamColor));
 
@@ -65,8 +68,28 @@ public class MatchActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Closing Activity")
+                .setMessage("Are you sure you want to close this activity?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
     private void handlePhaseChange(Constants.GameMode gameMode) {
         m_currentForm.currentMode = gameMode;
+
+        System.out.println("test");
 
         // Create the default gray button
         Drawable defaultButtonBackground = getResources().getDrawable(R.drawable.rounded_button);

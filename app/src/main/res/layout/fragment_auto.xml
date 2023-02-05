@@ -22,367 +22,311 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Grid"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:text="Top Row:" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grid"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/delete_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="25sp"
+                    android:text="Delete Mode"
+                    android:textColor="@android:color/secondary_text_dark" />
+
+            </RelativeLayout>
+
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_border"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/grid_padding">
-
-                <Button
-                    android:id="@+id/topConeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="-"
-                    android:textColor="#000000" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cone_top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="CubeTop"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cone" />
-
-                    <TextView
-                        android:id="@+id/topConeCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/topConeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="+"
-                    android:textColor="#000000" />
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="3dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/grid_padding"
-                    android:background="?android:attr/listDivider"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:backgroundTintMode="src_over" />
-
-                <Button
-                    android:id="@+id/topCubeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="-"
-                    android:textColor="#FFFFFF" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cube_top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="ConeTop"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cube" />
-
-                    <TextView
-                        android:id="@+id/topCubeCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                </FrameLayout>
-
-
-                <Button
-                    android:id="@+id/topCubeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="+"
-                    android:textColor="#FFFFFF" />
-
-            </LinearLayout>
-
-            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:text="Middle Row:" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_border"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/grid_padding">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/midConeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="-"
-                    android:textColor="#000000" />
-
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cone_mid"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="CubeMid"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cone" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/midConeCount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:layout_marginRight="12dp"
+                        android:gravity="right"
+                        android:text="Top Row:"
+                        android:textSize="25sp" />
 
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/midConeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="+"
-                    android:textColor="#000000" />
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="3dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/grid_padding"
-                    android:background="?android:attr/listDivider"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:backgroundTintMode="src_over" />
-
-                <Button
-                    android:id="@+id/midCubeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="-"
-                    android:textColor="#FFFFFF" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cube_mid"
+                    <LinearLayout
+                        android:id="@+id/top_row_border"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="ConeMid"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cube" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cone_top"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeTop"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
+
+                            <TextView
+                                android:id="@+id/topConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_top"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeTop"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/topCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/midCubeCount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                        android:layout_marginRight="12dp"
+                        android:gravity="right"
+                        android:text="Middle Row:"
+                        android:textSize="25sp" />
 
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/midCubeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="+"
-                    android:textColor="#FFFFFF" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:text="Bottom Row:" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_border"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/grid_padding">
-
-                <Button
-                    android:id="@+id/botConeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="-"
-                    android:textColor="#000000" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cone_bot"
+                    <LinearLayout
+                        android:id="@+id/mid_row_border"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="CubeBot"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cone" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cone_mid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeMid"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
+
+                            <TextView
+                                android:id="@+id/midConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_mid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeMid"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/midCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/botConeCount"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textView"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:layout_marginRight="12dp"
+                        android:text="Bottom Row:"
+                        android:textSize="25sp" />
 
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/botConeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cone_chip"
-                    android:text="+"
-                    android:textColor="#000000" />
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="3dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/grid_padding"
-                    android:background="?android:attr/listDivider"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:backgroundTintMode="src_over" />
-
-                <Button
-                    android:id="@+id/botCubeChipMinus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="-"
-                    android:textColor="#FFFFFF" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/cube_bot"
+                    <LinearLayout
+                        android:id="@+id/bot_row_border"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="10dp"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:contentDescription="ConeBot"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/cube" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
 
-                    <TextView
-                        android:id="@+id/botCubeCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="8"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
 
-                </FrameLayout>
+                            <ImageButton
+                                android:id="@+id/cone_bot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeBot"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
 
-                <Button
-                    android:id="@+id/botCubeChipPlus"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/cube_chip"
-                    android:text="+"
-                    android:textColor="#FFFFFF" />
+                            <TextView
+                                android:id="@+id/botConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
 
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_bot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeBot"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/botCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
