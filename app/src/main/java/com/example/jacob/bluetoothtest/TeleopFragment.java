@@ -219,6 +219,7 @@ public class TeleopFragment extends Fragment {
                 m_playButtonA.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonA.setImageResource(R.drawable.play_button);
+                m_currentForm.opponentADefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
@@ -228,6 +229,7 @@ public class TeleopFragment extends Fragment {
                 m_playButtonB.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonB.setImageResource(R.drawable.play_button);
+                m_currentForm.opponentBDefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
@@ -237,22 +239,32 @@ public class TeleopFragment extends Fragment {
                 m_playButtonC.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonC.setImageResource(R.drawable.play_button);
+                m_currentForm.opponentCDefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
         m_resetButtonA.setOnClickListener(v -> {
             m_seconds[0] = 0;
-            m_running[0] = false;
+            m_currentForm.opponentADefenceTime = 0;
+            if (m_running[0]) {
+                m_playButtonA.performClick();
+            }
         });
 
         m_resetButtonB.setOnClickListener(v -> {
             m_seconds[1] = 0;
-            m_running[1] = false;
+            m_currentForm.opponentBDefenceTime = 0;
+            if (m_running[1]) {
+                m_playButtonB.performClick();
+            }
         });
 
         m_resetButtonC.setOnClickListener(v -> {
             m_seconds[2] = 0;
-            m_running[2] = false;
+            m_currentForm.opponentCDefenceTime = 0;
+            if (m_running[2]) {
+                m_playButtonC.performClick();
+            }
         });
 
         // This detects when the enter button is pressed on the EditText field
