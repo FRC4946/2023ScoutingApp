@@ -4,4 +4,6 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="grid_padding">20dp</dimen>
     <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
+    <dimen name="defending_table_text">20dp</dimen>
+    <dimen name="defending_table_padding">10dp</dimen>
 </resources>

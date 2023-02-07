@@ -1,14 +1,581 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal|center_vertical"
+    android:animateLayoutChanges="true"
+    app:layout_goneMarginLeft="10dp"
     tools:context=".TeleopFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grid"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/delete_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="Delete Mode"
+                    android:textColor="@android:color/secondary_text_dark"
+                    android:textSize="25sp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:gravity="right"
+                        android:text="Top Row:"
+                        android:textSize="25sp" />
+
+                    <LinearLayout
+                        android:id="@+id/top_row_border"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cone_top"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeTop"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
+
+                            <TextView
+                                android:id="@+id/topConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_top"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeTop"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/topCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:gravity="right"
+                        android:text="Middle Row:"
+                        android:textSize="25sp" />
+
+                    <LinearLayout
+                        android:id="@+id/mid_row_border"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cone_mid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeMid"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
+
+                            <TextView
+                                android:id="@+id/midConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_mid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeMid"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/midCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:text="Bottom Row:"
+                        android:textSize="25sp" />
+
+                    <LinearLayout
+                        android:id="@+id/bot_row_border"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rounded_border"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/grid_padding">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cone_bot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="CubeBot"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cone" />
+
+                            <TextView
+                                android:id="@+id/botConeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#000000"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="3dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="@dimen/grid_padding"
+                            android:background="?android:attr/listDivider"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:backgroundTintMode="src_over" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/cube_bot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="@null"
+                                android:contentDescription="ConeBot"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/cube" />
+
+                            <TextView
+                                android:id="@+id/botCubeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="8"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Defending"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+                <TableRow
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:id="@+id/title_row"
+                    android:background="#FB5D5D"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:text="Team Being Defended"
+                        android:textSize="@dimen/defending_table_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_weight="1"
+                        android:text="Time defended"
+                        android:textSize="@dimen/defending_table_text"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Team "
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <EditText
+                            android:id="@+id/team_number_a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="6"
+                            android:inputType="number" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/timer_a"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/timer_chip"
+                            android:text="1:16"
+                            android:textAlignment="center"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <ImageButton
+                            android:id="@+id/play_button_a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="play/pause button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/play_button" />
+
+                        <ImageButton
+                            android:id="@+id/reset_button_a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="restart button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/restart_button" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Team "
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <EditText
+                            android:id="@+id/team_number_b"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="6"
+                            android:inputType="number" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/timer_b"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/timer_chip"
+                            android:text="1:16"
+                            android:textAlignment="center"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <ImageButton
+                            android:id="@+id/play_button_b"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="play/pause button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/play_button" />
+
+                        <ImageButton
+                            android:id="@+id/reset_button_b"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="restart button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/restart_button" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Team "
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <EditText
+                            android:id="@+id/team_number_c"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="6"
+                            android:inputType="number" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/timer_c"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/timer_chip"
+                            android:text="1:16"
+                            android:textAlignment="center"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/defending_table_text" />
+
+                        <ImageButton
+                            android:id="@+id/play_button_c"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="play/pause button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/play_button" />
+
+                        <ImageButton
+                            android:id="@+id/reset_button_c"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:contentDescription="restart button"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/restart_button" />
+                    </LinearLayout>
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

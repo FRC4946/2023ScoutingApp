@@ -45,14 +45,11 @@ public class ScoutingForm implements Serializable {
     public boolean park = false;
     public double endgameTime = 0.0;
     public int opponentA = 0;
-    public ArrayList<TimePeriod> defenceATimes = new ArrayList<TimePeriod>();
-    public double opponentADefenceTime = 0.0;
+    public int opponentADefenceTime = 0;
     public int opponentB = 0;
-    public ArrayList<TimePeriod> defenceBTimes = new ArrayList<TimePeriod>();
-    public double opponentBDefenceTime = 0.0;
+    public int opponentBDefenceTime = 0;
     public int opponentC = 0;
-    public ArrayList<TimePeriod> defenceCTimes = new ArrayList<TimePeriod>();
-    public double opponentCDefenceTime = 0.0;
+    public int opponentCDefenceTime = 0;
 
     private boolean m_finalized = false;
 
@@ -141,22 +138,14 @@ public class ScoutingForm implements Serializable {
         ret.park = "True".equals(arr[21]);
         ret.endgameTime = Double.parseDouble(arr[22]);
         ret.opponentA = Integer.parseInt(arr[23]);
-        ret.opponentADefenceTime = Double.parseDouble(arr[24]);
+        ret.opponentADefenceTime = Integer.parseInt(arr[24]);
         ret.opponentB = Integer.parseInt(arr[25]);
-        ret.opponentBDefenceTime = Double.parseDouble(arr[26]);
+        ret.opponentBDefenceTime = Integer.parseInt(arr[26]);
         ret.opponentC = Integer.parseInt(arr[27]);
-        ret.opponentCDefenceTime = Double.parseDouble(arr[28]);
+        ret.opponentCDefenceTime = Integer.parseInt(arr[28]);
         ret.matchStarted = true;
         ret.matchOver = true;
 
         return ret;
-    }
-
-    private long getTimeListSum(ArrayList<TimePeriod> list) {
-        long sum = 0;
-        for (TimePeriod p : list) {
-            sum += p.getDuration();
-        }
-        return sum;
     }
 }

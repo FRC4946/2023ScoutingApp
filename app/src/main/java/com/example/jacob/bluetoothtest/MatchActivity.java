@@ -89,8 +89,6 @@ public class MatchActivity extends AppCompatActivity {
     private void handlePhaseChange(Constants.GameMode gameMode) {
         m_currentForm.currentMode = gameMode;
 
-        System.out.println("test");
-
         // Create the default gray button
         Drawable defaultButtonBackground = getResources().getDrawable(R.drawable.rounded_button);
         ColorFilter defaultButtonTint = new PorterDuffColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
