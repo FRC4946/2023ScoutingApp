@@ -50,6 +50,10 @@ public class ScoutingForm implements Serializable {
     public double opponentBDefenceTime = 0;
     public int opponentC = 0;
     public double opponentCDefenceTime = 0;
+    public double loadingTime = 0;
+    public double transportTime = 0;
+    public double communityTime = 0;
+    public String startingPosition = "null";
     public int currentCycle = 0; // First cycle will be 0 in the code, but will display 1 to the user
 
     // The double[] is formatted such that
@@ -112,7 +116,11 @@ public class ScoutingForm implements Serializable {
                 + opponentB + ","
                 + opponentBDefenceTime + ","
                 + opponentC + ","
-                + opponentCDefenceTime + ",";
+                + opponentCDefenceTime + ","
+                + loadingTime + ","
+                + transportTime + ","
+                + communityTime + ","
+                + startingPosition + ",";
     }
 
     public static ScoutingForm fromString(String s) {
