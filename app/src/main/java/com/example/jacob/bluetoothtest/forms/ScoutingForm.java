@@ -158,6 +158,10 @@ public class ScoutingForm implements Serializable {
         ret.opponentBDefenceTime = Integer.parseInt(arr[26]);
         ret.opponentC = Integer.parseInt(arr[27]);
         ret.opponentCDefenceTime = Integer.parseInt(arr[28]);
+        ret.loadingTime = Integer.parseInt(arr[29]);
+        ret.transportTime = Integer.parseInt(arr[30]);
+        ret.communityTime = Integer.parseInt(arr[31]);
+        ret.startingPosition = arr[32];
         ret.matchStarted = true;
         ret.matchOver = true;
 
