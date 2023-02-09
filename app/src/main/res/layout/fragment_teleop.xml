@@ -336,244 +336,40 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Defending"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp">
+                <TextView
+                    android:id="@+id/bottom_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Defending"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
-                <TableRow
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:id="@+id/title_row"
-                    android:background="#FB5D5D"
-                    android:padding="10dp">
+                <Button
+                    android:id="@+id/offence_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="Change to Offence"/>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:text="Team Being Defended"
-                        android:textSize="@dimen/defending_table_text"
-                        android:textStyle="bold" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1"
-                        android:text="Time defended"
-                        android:textSize="@dimen/defending_table_text"
-                        android:textStyle="bold" />
-                </TableRow>
+            <include
+                android:id="@+id/defence_table"
+                android:visibility="visible"
+                layout="@layout/defence_table" />
 
-                <TableRow android:padding="10dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Team "
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <EditText
-                            android:id="@+id/team_number_a"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ems="6"
-                            android:inputType="number" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/timer_a"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/timer_chip"
-                            android:text="1:16"
-                            android:textAlignment="center"
-                            android:textColor="#000000"
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <ImageButton
-                            android:id="@+id/play_button_a"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="play/pause button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/play_button" />
-
-                        <ImageButton
-                            android:id="@+id/reset_button_a"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="restart button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/restart_button" />
-                    </LinearLayout>
-                </TableRow>
-
-                <TableRow android:padding="10dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Team "
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <EditText
-                            android:id="@+id/team_number_b"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ems="6"
-                            android:inputType="number" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/timer_b"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/timer_chip"
-                            android:text="1:16"
-                            android:textAlignment="center"
-                            android:textColor="#000000"
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <ImageButton
-                            android:id="@+id/play_button_b"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="play/pause button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/play_button" />
-
-                        <ImageButton
-                            android:id="@+id/reset_button_b"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="restart button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/restart_button" />
-                    </LinearLayout>
-                </TableRow>
-
-                <TableRow android:padding="10dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Team "
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <EditText
-                            android:id="@+id/team_number_c"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ems="6"
-                            android:inputType="number" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/timer_c"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/timer_chip"
-                            android:text="1:16"
-                            android:textAlignment="center"
-                            android:textColor="#000000"
-                            android:textSize="@dimen/defending_table_text" />
-
-                        <ImageButton
-                            android:id="@+id/play_button_c"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="play/pause button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/play_button" />
-
-                        <ImageButton
-                            android:id="@+id/reset_button_c"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:adjustViewBounds="true"
-                            android:background="@null"
-                            android:contentDescription="restart button"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/restart_button" />
-                    </LinearLayout>
-                </TableRow>
-
-            </TableLayout>
+            <include
+                android:id="@+id/offence_table"
+                android:visibility="gone"
+                layout="@layout/offence_table" />
 
         </LinearLayout>
 

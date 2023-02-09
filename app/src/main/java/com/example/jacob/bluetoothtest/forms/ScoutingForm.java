@@ -45,11 +45,18 @@ public class ScoutingForm implements Serializable {
     public boolean park = false;
     public double endgameTime = 0.0;
     public int opponentA = 0;
-    public int opponentADefenceTime = 0;
+    public double opponentADefenceTime = 0;
     public int opponentB = 0;
-    public int opponentBDefenceTime = 0;
+    public double opponentBDefenceTime = 0;
     public int opponentC = 0;
-    public int opponentCDefenceTime = 0;
+    public double opponentCDefenceTime = 0;
+    public int currentCycle = 0; // First cycle will be 0 in the code, but will display 1 to the user
+
+    // The double[] is formatted such that
+    // Index 0: Loading Time
+    // Index 1: Transport Time
+    // Index 2: Community Time
+    public ArrayList<double[]> cycleTimes = new ArrayList<>();
 
     private boolean m_finalized = false;
 

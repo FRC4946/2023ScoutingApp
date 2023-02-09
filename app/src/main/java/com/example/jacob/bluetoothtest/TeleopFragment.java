@@ -1,5 +1,6 @@
 package com.example.jacob.bluetoothtest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,13 +10,16 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -36,12 +40,31 @@ public class TeleopFragment extends Fragment {
     private ImageButton m_topCone, m_midCone, m_botCone, m_topCube, m_midCube, m_botCube;
     private CheckBox m_deleteModeSwitch;
     private TextView m_topConeCount, m_topCubeCount, m_midConeCount, m_midCubeCount, m_botConeCount, m_botCubeCount;
+    private TableRow m_titleRow;
+    private Button m_offenceToggle;
+
+    // Variables for Defence Table
     private ImageButton m_playButtonA, m_playButtonB, m_playButtonC, m_resetButtonA, m_resetButtonB, m_resetButtonC;
     private TextView m_timerA, m_timerB, m_timerC;
-    private TableRow m_titleRow;
     private EditText m_teamNumberA, m_teamNumberB, m_teamNumberC;
-    private float[] m_seconds = {0.0f, 0.0f, 0.0f};
-    private boolean[] m_running = {false, false, false};
+    private TableLayout m_defenceTable, m_offenceTable;
+    private TextView m_bottomTitle;
+    private Button m_cycleMinus, m_cyclePlus;
+    private Button m_loadingTimer, m_transportTimer, m_communityTimer;
+    private TextView m_cycleNumber;
+
+    // Whether the defence timers are running
+    // Index 0: Team A Defence Timer
+    // Index 1: Team B Defence Timer
+    // Index 2: Team C Defence Timer
+    private boolean[] m_runningDefence = {false, false, false};
+
+    // Whether the offence timers are running
+    // Index 0: Loading Timer
+    // Index 1: Transport Timer
+    // Index 2: Community Timer
+    private boolean[] m_runningOffence = {false, false, false};
+    private boolean m_offence = false; // Whether or not the robot is attacking or defending
 
     public TeleopFragment() {
         // Required empty public constructor
@@ -76,10 +99,6 @@ public class TeleopFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_teleop, container, false);
 
-        m_seconds[0] = m_currentForm.opponentADefenceTime;
-        m_seconds[1] = m_currentForm.opponentBDefenceTime;
-        m_seconds[2] = m_currentForm.opponentCDefenceTime;
-
         m_topCone = view.findViewById(R.id.cone_top);
         m_midCone = view.findViewById(R.id.cone_mid);
         m_botCone = view.findViewById(R.id.cone_bot);
@@ -93,23 +112,15 @@ public class TeleopFragment extends Fragment {
         m_topCubeCount = view.findViewById(R.id.topCubeCount);
         m_midCubeCount = view.findViewById(R.id.midCubeCount);
         m_botCubeCount = view.findViewById(R.id.botCubeCount);
-        m_playButtonA = view.findViewById(R.id.play_button_a);
-        m_playButtonB = view.findViewById(R.id.play_button_b);
-        m_playButtonC = view.findViewById(R.id.play_button_c);
-        m_timerA = view.findViewById(R.id.timer_a);
-        m_timerB = view.findViewById(R.id.timer_b);
-        m_timerC = view.findViewById(R.id.timer_c);
         m_titleRow = view.findViewById(R.id.title_row);
-        m_teamNumberA = view.findViewById(R.id.team_number_a);
-        m_teamNumberB = view.findViewById(R.id.team_number_b);
-        m_teamNumberC = view.findViewById(R.id.team_number_c);
-        m_resetButtonA = view.findViewById(R.id.reset_button_a);
-        m_resetButtonB = view.findViewById(R.id.reset_button_b);
-        m_resetButtonC = view.findViewById(R.id.reset_button_c);
+        m_offenceToggle = view.findViewById(R.id.offence_toggle);
+        m_bottomTitle = view.findViewById(R.id.bottom_title);
 
         updateCounts();
         runTimer();
         updateTitleRowColor();
+        loadDefenceTable(view);
+        loadOffenceTable(view);
 
         m_deleteModeSwitch.setOnClickListener(v -> {
             if (m_deleteModeSwitch.isChecked()) {
@@ -211,58 +222,103 @@ public class TeleopFragment extends Fragment {
             updateCounts();
         });
 
+        m_offenceToggle.setOnClickListener(v -> {
+            m_offence = !m_offence;
+
+            if (m_offence) {
+                m_offenceTable.setVisibility(View.VISIBLE);
+                m_defenceTable.setVisibility(View.GONE);
+                m_bottomTitle.setText("Attacking");
+                m_offenceToggle.setText("Change to Defence");
+            } else {
+                m_offenceTable.setVisibility(View.GONE);
+                m_defenceTable.setVisibility(View.VISIBLE);
+                m_bottomTitle.setText("Defending");
+                m_offenceToggle.setText("Change to Offence");
+            }
+        });
+
+        // Create the first cycle
+        m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0});
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    private void updateCounts() {
+        m_topConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesTop)));
+        m_midConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesMid)));
+        m_botConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesBot)));
+        m_topCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesTop)));
+        m_midCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesMid)));
+        m_botCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesBot)));
+    }
+
+    private void updateTitleRowColor() {
+        m_titleRow.setBackgroundColor(m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
+    }
+
+    private void loadDefenceTable(View view) {
+        m_defenceTable = view.findViewById(R.id.defence_table);
+        m_playButtonA = view.findViewById(R.id.play_button_a);
+        m_playButtonB = view.findViewById(R.id.play_button_b);
+        m_playButtonC = view.findViewById(R.id.play_button_c);
+        m_timerA = view.findViewById(R.id.timer_a);
+        m_timerB = view.findViewById(R.id.timer_b);
+        m_timerC = view.findViewById(R.id.timer_c);
+        m_teamNumberA = view.findViewById(R.id.team_number_a);
+        m_teamNumberB = view.findViewById(R.id.team_number_b);
+        m_teamNumberC = view.findViewById(R.id.team_number_c);
+        m_resetButtonA = view.findViewById(R.id.reset_button_a);
+        m_resetButtonB = view.findViewById(R.id.reset_button_b);
+        m_resetButtonC = view.findViewById(R.id.reset_button_c);
+
         m_playButtonA.setOnClickListener(v -> {
             m_teamNumberA.clearFocus();
             m_titleRow.requestFocus();
-            m_running[0] = !m_running[0];
-            if (m_running[0]) {
+            m_runningDefence[0] = !m_runningDefence[0];
+            if (m_runningDefence[0]) {
                 m_playButtonA.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonA.setImageResource(R.drawable.play_button);
-                m_currentForm.opponentADefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
         m_playButtonB.setOnClickListener(v -> {
-            m_running[1] = !m_running[1];
-            if (m_running[1]) {
+            m_runningDefence[1] = !m_runningDefence[1];
+            if (m_runningDefence[1]) {
                 m_playButtonB.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonB.setImageResource(R.drawable.play_button);
-                m_currentForm.opponentBDefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
         m_playButtonC.setOnClickListener(v -> {
-            m_running[2] = !m_running[2];
-            if (m_running[2]) {
+            m_runningDefence[2] = !m_runningDefence[2];
+            if (m_runningDefence[2]) {
                 m_playButtonC.setImageResource(R.drawable.pause_button);
             } else {
                 m_playButtonC.setImageResource(R.drawable.play_button);
-                m_currentForm.opponentCDefenceTime = (int) Math.floor(m_seconds[0]);
             }
         });
 
         m_resetButtonA.setOnClickListener(v -> {
-            m_seconds[0] = 0;
             m_currentForm.opponentADefenceTime = 0;
-            if (m_running[0]) {
+            if (m_runningDefence[0]) {
                 m_playButtonA.performClick();
             }
         });
 
         m_resetButtonB.setOnClickListener(v -> {
-            m_seconds[1] = 0;
             m_currentForm.opponentBDefenceTime = 0;
-            if (m_running[1]) {
+            if (m_runningDefence[1]) {
                 m_playButtonB.performClick();
             }
         });
 
         m_resetButtonC.setOnClickListener(v -> {
-            m_seconds[2] = 0;
             m_currentForm.opponentCDefenceTime = 0;
-            if (m_running[2]) {
+            if (m_runningDefence[2]) {
                 m_playButtonC.performClick();
             }
         });
@@ -276,8 +332,13 @@ public class TeleopFragment extends Fragment {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                    m_currentForm.opponentA = Integer.parseInt(m_teamNumberA.getText().toString());
-                    System.out.println(m_currentForm.opponentA);
+                    // Try to parse the team number to an integer
+                    try {
+                        m_currentForm.opponentA = Integer.parseInt(m_teamNumberA.getText().toString());
+                    } catch(Exception e) {
+                        m_currentForm.opponentA = 0;
+                    }
+
                     m_teamNumberA.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
@@ -294,7 +355,13 @@ public class TeleopFragment extends Fragment {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                    m_currentForm.opponentB = Integer.parseInt(m_teamNumberB.getText().toString());
+                    // Try to parse the team number to an integer
+                    try {
+                        m_currentForm.opponentB = Integer.parseInt(m_teamNumberB.getText().toString());
+                    } catch(Exception e) {
+                        m_currentForm.opponentB = 0;
+                    }
+
                     m_teamNumberB.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
@@ -311,7 +378,13 @@ public class TeleopFragment extends Fragment {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                    m_currentForm.opponentC = Integer.parseInt(m_teamNumberC.getText().toString());
+                    // Try to parse the team number to an integer
+                    try {
+                        m_currentForm.opponentC = Integer.parseInt(m_teamNumberC.getText().toString());
+                    } catch(Exception e) {
+                        m_currentForm.opponentC = 0;
+                    }
+
                     m_teamNumberC.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
@@ -324,15 +397,107 @@ public class TeleopFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
-        return view;
+        if (m_currentForm.opponentA != 0) {
+            String teamNumberA = String.format(Locale.getDefault(), Integer.toString(m_currentForm.opponentA));
+            m_teamNumberA.setText(teamNumberA);
+        }
+
+        if (m_currentForm.opponentB != 0) {
+            String teamNumberB = String.format(Locale.getDefault(), Integer.toString(m_currentForm.opponentB));
+            m_teamNumberB.setText(teamNumberB);
+        }
+
+        if (m_currentForm.opponentC != 0) {
+            String teamNumberC = String.format(Locale.getDefault(), Integer.toString(m_currentForm.opponentC));
+            m_teamNumberC.setText(teamNumberC);
+        }
+    }
+
+    private void loadOffenceTable(View view) {
+        m_offenceTable = view.findViewById(R.id.offence_table);
+        m_cycleMinus = view.findViewById(R.id.cycle_minus);
+        m_cyclePlus = view.findViewById(R.id.cycle_plus);
+        m_cycleNumber = view.findViewById(R.id.cycle_number);
+        m_loadingTimer = view.findViewById(R.id.loading_timer);
+        m_transportTimer = view.findViewById(R.id.transport_timer);
+        m_communityTimer = view.findViewById(R.id.community_timer);
+
+        m_cycleMinus.setOnClickListener(v -> {
+            m_currentForm.currentCycle = Math.max(m_currentForm.currentCycle - 1, 0);
+            m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
+        });
+
+        m_cyclePlus.setOnClickListener(v -> {
+            m_currentForm.currentCycle++;
+            m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
+            // Check if the index does not exist
+            if(m_currentForm.currentCycle >= m_currentForm.cycleTimes.size() || m_currentForm.currentCycle < 0){
+                m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0});
+            }
+        });
+
+        m_loadingTimer.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    m_runningOffence[0] = true;
+                    m_loadingTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    m_runningOffence[0] = false;
+                    m_loadingTimer.getBackground().clearColorFilter();
+                    v.performClick();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
+
+        m_transportTimer.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    m_runningOffence[1] = true;
+                    m_transportTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    m_runningOffence[1] = false;
+                    m_transportTimer.getBackground().clearColorFilter();
+                    v.performClick();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
+
+        m_communityTimer.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    m_runningOffence[2] = true;
+                    m_communityTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    m_runningOffence[2] = false;
+                    m_communityTimer.getBackground().clearColorFilter();
+                    v.performClick();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
+
+        // When displaying the cycle number to the user, increment it by one
+        // To make sure that the first cycle is 1 instead of 0
+        m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
     }
 
     // If the activity is paused, stop the stopwatch.
     @Override
     public void onPause() {
         super.onPause();
-        m_running = new boolean[]{false, false, false};
+        m_runningDefence = new boolean[]{false, false, false};
+        m_runningOffence = new boolean[]{false, false, false};
     }
 
     // Sets the Number of seconds on the timer. The runTimer() method uses a Handler
@@ -348,39 +513,47 @@ public class TeleopFragment extends Fragment {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                // DEFENCE TIMERS:
+                // If running is true, increment the seconds variable.
+                if (m_runningDefence[0])
+                    m_currentForm.opponentADefenceTime+=0.1;
+                if (m_runningDefence[1])
+                    m_currentForm.opponentBDefenceTime+=0.1;
+                if (m_runningDefence[2])
+                    m_currentForm.opponentCDefenceTime+=0.1;
+
                 // Format the seconds minutes, and seconds.
-                String timerAText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_seconds[0] / 60), (int) Math.floor(m_seconds[0]) % 60);
-                String timerBText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_seconds[1] / 60), (int) Math.floor(m_seconds[1]) % 60);
-                String timerCText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_seconds[2] / 60), (int) Math.floor(m_seconds[2]) % 60);
+                String timerADefenceText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.opponentADefenceTime / 60), (int) Math.floor(m_currentForm.opponentADefenceTime % 60));
+                String timerBDefenceText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.opponentBDefenceTime / 60), (int) Math.floor(m_currentForm.opponentBDefenceTime) % 60);
+                String timerCDefenceText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.opponentCDefenceTime / 60), (int) Math.floor(m_currentForm.opponentCDefenceTime) % 60);
 
                 // Set the text view text.
-                m_timerA.setText(timerAText);
-                m_timerB.setText(timerBText);
-                m_timerC.setText(timerCText);
+                m_timerA.setText(timerADefenceText);
+                m_timerB.setText(timerBDefenceText);
+                m_timerC.setText(timerCDefenceText);
 
+                // OFFENCE TIMERS:
                 // If running is true, increment the seconds variable.
-                for (int i = 0; i < 3; i++) {
-                    if (m_running[i]) {
-                        m_seconds[i]+=0.1;
-                    }
-                }
+                if (m_runningOffence[0])
+                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0]+=0.1;
+                if (m_runningOffence[1])
+                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1]+=0.1;
+                if (m_runningOffence[2])
+                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]+=0.1;
+
+                // Format the seconds minutes, and seconds.
+                String loadingTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] % 60));
+                String transportTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1]) % 60);
+                String communityTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]) % 60);
+
+                // Set the text view text.
+                m_loadingTimer.setText(loadingTimerText);
+                m_transportTimer.setText(transportTimerText);
+                m_communityTimer.setText(communityTimerText);
 
                 // Post the code again with a delay of 0.1 second.
                 handler.postDelayed(this, 100);
             }
         });
-    }
-
-    private void updateCounts() {
-        m_topConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesTop)));
-        m_midConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesMid)));
-        m_botConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesBot)));
-        m_topCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesTop)));
-        m_midCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesMid)));
-        m_botCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesBot)));
-    }
-
-    private void updateTitleRowColor() {
-        m_titleRow.setBackgroundColor(m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
     }
 }
