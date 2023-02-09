@@ -57,9 +57,10 @@ public class ScoutingForm implements Serializable {
     public int currentCycle = 0; // First cycle will be 0 in the code, but will display 1 to the user
 
     // The double[] is formatted such that
-    // Index 0: Loading Time
-    // Index 1: Transport Time
-    // Index 2: Community Time
+    // Index 0: Transport Timer 1
+    // Index 1: Loading Timer
+    // Index 2: Transport Timer 2
+    // Index 3: Community Timer
     public ArrayList<double[]> cycleTimes = new ArrayList<>();
 
     private boolean m_finalized = false;

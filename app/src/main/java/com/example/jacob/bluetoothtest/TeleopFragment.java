@@ -1,6 +1,5 @@
 package com.example.jacob.bluetoothtest;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,7 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -22,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
 
@@ -49,9 +48,8 @@ public class TeleopFragment extends Fragment {
     private EditText m_teamNumberA, m_teamNumberB, m_teamNumberC;
     private TableLayout m_defenceTable, m_offenceTable;
     private TextView m_bottomTitle;
-    private Button m_cycleMinus, m_cyclePlus;
-    private Button m_loadingTimer, m_transportTimer, m_communityTimer;
-    private TextView m_cycleNumber;
+    private Button m_loadingTimer, m_transportTimer1, m_transportTimer2, m_communityTimer;
+    private int m_cyclePhase = -1; // 0: transport, 1: loading, 2: transport, 3: community
 
     // Whether the defence timers are running
     // Index 0: Team A Defence Timer
@@ -60,10 +58,11 @@ public class TeleopFragment extends Fragment {
     private boolean[] m_runningDefence = {false, false, false};
 
     // Whether the offence timers are running
-    // Index 0: Loading Timer
-    // Index 1: Transport Timer
-    // Index 2: Community Timer
-    private boolean[] m_runningOffence = {false, false, false};
+    // Index 0: Transport Timer 1
+    // Index 1: Loading Timer
+    // Index 2: Transport Timer 2
+    // Index 3: Community Timer
+    private boolean[] m_runningOffence = {false, false, false, false};
     private boolean m_offence = false; // Whether or not the robot is attacking or defending
 
     public TeleopFragment() {
@@ -99,6 +98,28 @@ public class TeleopFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_teleop, container, false);
 
+        m_offenceToggle = view.findViewById(R.id.offence_toggle);
+        m_bottomTitle = view.findViewById(R.id.bottom_title);
+
+        runTimer();
+        loadGrid(view);
+        loadDefenceTable(view);
+        loadOffenceTable(view);
+        updateCounts();
+
+        // Create the first cycle if there is none
+        if (m_currentForm.cycleTimes.size() == 0)
+            m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    /**
+     * Load all the stuff pertaining to the scoring, and set up button listeners
+     * @param view The layout for this fragment
+     */
+    private void loadGrid(View view) {
         m_topCone = view.findViewById(R.id.cone_top);
         m_midCone = view.findViewById(R.id.cone_mid);
         m_botCone = view.findViewById(R.id.cone_bot);
@@ -112,15 +133,6 @@ public class TeleopFragment extends Fragment {
         m_topCubeCount = view.findViewById(R.id.topCubeCount);
         m_midCubeCount = view.findViewById(R.id.midCubeCount);
         m_botCubeCount = view.findViewById(R.id.botCubeCount);
-        m_titleRow = view.findViewById(R.id.title_row);
-        m_offenceToggle = view.findViewById(R.id.offence_toggle);
-        m_bottomTitle = view.findViewById(R.id.bottom_title);
-
-        updateCounts();
-        runTimer();
-        updateTitleRowColor();
-        loadDefenceTable(view);
-        loadOffenceTable(view);
 
         m_deleteModeSwitch.setOnClickListener(v -> {
             if (m_deleteModeSwitch.isChecked()) {
@@ -237,14 +249,11 @@ public class TeleopFragment extends Fragment {
                 m_offenceToggle.setText("Change to Offence");
             }
         });
-
-        // Create the first cycle
-        m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0});
-
-        // Inflate the layout for this fragment
-        return view;
     }
 
+    /**
+     * Used by loadGrid to update the counts on the cones/cubes
+     */
     private void updateCounts() {
         m_topConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesTop)));
         m_midConeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.conesMid)));
@@ -254,11 +263,12 @@ public class TeleopFragment extends Fragment {
         m_botCubeCount.setText(String.format(Locale.getDefault(), Integer.toString(m_currentForm.cubesBot)));
     }
 
-    private void updateTitleRowColor() {
-        m_titleRow.setBackgroundColor(m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
-    }
-
+    /**
+     * Load all the stuff pertaining to the defence table, and set up button listeners
+     * @param view The layout for this fragment
+     */
     private void loadDefenceTable(View view) {
+        m_titleRow = view.findViewById(R.id.title_row);
         m_defenceTable = view.findViewById(R.id.defence_table);
         m_playButtonA = view.findViewById(R.id.play_button_a);
         m_playButtonB = view.findViewById(R.id.play_button_b);
@@ -272,6 +282,9 @@ public class TeleopFragment extends Fragment {
         m_resetButtonA = view.findViewById(R.id.reset_button_a);
         m_resetButtonB = view.findViewById(R.id.reset_button_b);
         m_resetButtonC = view.findViewById(R.id.reset_button_c);
+
+        // Update the title row color to match the team color
+        m_titleRow.setBackgroundColor(m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
 
         m_playButtonA.setOnClickListener(v -> {
             m_teamNumberA.clearFocus();
@@ -413,91 +426,119 @@ public class TeleopFragment extends Fragment {
         }
     }
 
+    /**
+     * Load all the stuff pertaining to the offence table, and set up button listeners
+     * @param view The layout for this fragment
+     */
     private void loadOffenceTable(View view) {
         m_offenceTable = view.findViewById(R.id.offence_table);
-        m_cycleMinus = view.findViewById(R.id.cycle_minus);
-        m_cyclePlus = view.findViewById(R.id.cycle_plus);
-        m_cycleNumber = view.findViewById(R.id.cycle_number);
         m_loadingTimer = view.findViewById(R.id.loading_timer);
-        m_transportTimer = view.findViewById(R.id.transport_timer);
+        m_transportTimer1 = view.findViewById(R.id.transport_timer_1);
+        m_transportTimer2 = view.findViewById(R.id.transport_timer_2);
         m_communityTimer = view.findViewById(R.id.community_timer);
 
-        m_cycleMinus.setOnClickListener(v -> {
-            m_currentForm.currentCycle = Math.max(m_currentForm.currentCycle - 1, 0);
-            m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
-        });
+        m_transportTimer1.setOnClickListener(v -> {
+            // Check if the buttons were pressed in the proper order
+            if (m_cyclePhase == -1 || m_cyclePhase == 3) {
+                // Check if managed to complete one full cycle
+                if (m_cyclePhase == 3) {
+                    // Create a new cycle in cycle times
+                    m_currentForm.currentCycle++;
+                    m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+                    // Congratulate the user
+                    Utilities.showToast(getContext(),"Cycle Completed!",Toast.LENGTH_SHORT);
+                }
 
-        m_cyclePlus.setOnClickListener(v -> {
-            m_currentForm.currentCycle++;
-            m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
-            // Check if the index does not exist
-            if(m_currentForm.currentCycle >= m_currentForm.cycleTimes.size() || m_currentForm.currentCycle < 0){
-                m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0});
+                // Increment the cycle
+                m_cyclePhase = 0;
+                // Pause the previous timer and start the current one
+                m_runningOffence[3] = false;
+                m_runningOffence[0] = true;
+                // Highlight the running timer, and deselect the stopped timer
+                m_communityTimer.getBackground().clearColorFilter();
+                m_transportTimer1.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#777777"), PorterDuff.Mode.MULTIPLY));
+            } else {
+                // If the buttons were pressed out of order, reset the cycle
+                resetCycle();
             }
         });
 
-        m_loadingTimer.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    m_runningOffence[0] = true;
-                    m_loadingTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
-                    break;
-                case MotionEvent.ACTION_UP:
-                    m_runningOffence[0] = false;
-                    m_loadingTimer.getBackground().clearColorFilter();
-                    v.performClick();
-                    break;
-                default:
-                    break;
+        m_loadingTimer.setOnClickListener(v -> {
+            // Check if the buttons were pressed in the proper order
+            if (m_cyclePhase == 0) {
+                // Increment the cycle
+                m_cyclePhase = 1;
+                // Pause the previous timer and start the current one
+                m_runningOffence[0] = false;
+                m_runningOffence[1] = true;
+                // Highlight the running timer, and deselect the stopped timer
+                m_transportTimer1.getBackground().clearColorFilter();
+                m_loadingTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#777777"), PorterDuff.Mode.MULTIPLY));
+            } else {
+                // If the buttons were pressed out of order, reset the cycle
+                resetCycle();
             }
-            return true;
         });
 
-        m_transportTimer.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    m_runningOffence[1] = true;
-                    m_transportTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
-                    break;
-                case MotionEvent.ACTION_UP:
-                    m_runningOffence[1] = false;
-                    m_transportTimer.getBackground().clearColorFilter();
-                    v.performClick();
-                    break;
-                default:
-                    break;
+        m_transportTimer2.setOnClickListener(v -> {
+            // Check if the buttons were pressed in the proper order
+            if (m_cyclePhase == 1) {
+                // Increment the cycle
+                m_cyclePhase = 2;
+                // Pause the previous timer and start the current one
+                m_runningOffence[1] = false;
+                m_runningOffence[2] = true;
+                // Highlight the running timer, and deselect the stopped timer
+                m_loadingTimer.getBackground().clearColorFilter();
+                m_transportTimer2.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#777777"), PorterDuff.Mode.MULTIPLY));
+            } else {
+                // If the buttons were pressed out of order, reset the cycle
+                resetCycle();
             }
-            return true;
         });
 
-        m_communityTimer.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    m_runningOffence[2] = true;
-                    m_communityTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#555555"), PorterDuff.Mode.MULTIPLY));
-                    break;
-                case MotionEvent.ACTION_UP:
-                    m_runningOffence[2] = false;
-                    m_communityTimer.getBackground().clearColorFilter();
-                    v.performClick();
-                    break;
-                default:
-                    break;
+        m_communityTimer.setOnClickListener(v -> {
+            // Check if the buttons were pressed in the proper order
+            if (m_cyclePhase == 2) {
+                // Increment the cycle
+                m_cyclePhase = 3;
+                // Pause the previous timer and start the current one
+                m_runningOffence[2] = false;
+                m_runningOffence[3] = true;
+                // Highlight the running timer, and deselect the stopped timer
+                m_transportTimer2.getBackground().clearColorFilter();
+                m_communityTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#777777"), PorterDuff.Mode.MULTIPLY));
+            } else {
+                // If the buttons were pressed out of order, reset the cycle
+                resetCycle();
             }
-            return true;
         });
-
-        // When displaying the cycle number to the user, increment it by one
-        // To make sure that the first cycle is 1 instead of 0
-        m_cycleNumber.setText(Integer.toString(m_currentForm.currentCycle + 1));
     }
 
+    /**
+     * Used by offence table to reset the cycle back to phase -1 with timers at 0, and inform the user
+     */
+    private void resetCycle() {
+        Utilities.showToast(getContext(),"Actions Out of Order. Resetting",Toast.LENGTH_SHORT);
+        m_cyclePhase = -1;
+        m_runningOffence = new boolean[]{false, false, false, false};
+        m_currentForm.cycleTimes.set(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+        m_transportTimer1.getBackground().clearColorFilter();
+        m_loadingTimer.getBackground().clearColorFilter();
+        m_transportTimer2.getBackground().clearColorFilter();
+        m_communityTimer.getBackground().clearColorFilter();
+    }
+
+
+    /**
+     * Stopwatch stuff below
+     */
     // If the activity is paused, stop the stopwatch.
     @Override
     public void onPause() {
         super.onPause();
         m_runningDefence = new boolean[]{false, false, false};
-        m_runningOffence = new boolean[]{false, false, false};
+        m_runningOffence = new boolean[]{false, false, false, false};
     }
 
     // Sets the Number of seconds on the timer. The runTimer() method uses a Handler
@@ -540,15 +581,19 @@ public class TeleopFragment extends Fragment {
                     m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1]+=0.1;
                 if (m_runningOffence[2])
                     m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]+=0.1;
+                if (m_runningOffence[3])
+                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3]+=0.1;
 
                 // Format the seconds minutes, and seconds.
-                String loadingTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] % 60));
-                String transportTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1]) % 60);
-                String communityTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]) % 60);
+                String transportTimer1Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0]) % 60);
+                String loadingTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] % 60));
+                String transportTimer2Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]) % 60);
+                String communityTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3]) % 60);
 
                 // Set the text view text.
+                m_transportTimer1.setText(transportTimer1Text);
                 m_loadingTimer.setText(loadingTimerText);
-                m_transportTimer.setText(transportTimerText);
+                m_transportTimer2.setText(transportTimer2Text);
                 m_communityTimer.setText(communityTimerText);
 
                 // Post the code again with a delay of 0.1 second.

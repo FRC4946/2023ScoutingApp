@@ -14,54 +14,21 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="Cycle"
+            android:text="1. Transport Time"
             android:textSize="@dimen/defending_table_text" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/transport_timer_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cycle_minus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/timer_chip"
-                android:gravity="center"
-                android:text="-"
-                android:textColor="#000000"
-                android:textSize="@dimen/defending_table_text"/>
-
-            <TextView
-                android:id="@+id/cycle_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginHorizontal="10dp"
-                android:background="@drawable/timer_chip"
-                android:gravity="center"
-                android:text="1"
-                android:textColor="#000000"
-                android:textSize="@dimen/defending_table_text"/>
-
-            <Button
-                android:id="@+id/cycle_plus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/timer_chip"
-                android:gravity="center"
-                android:text="+"
-                android:textColor="#000000"
-                android:textSize="@dimen/defending_table_text"/>
-
-
-        </LinearLayout>
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/timer_chip"
+            android:layout_column="2"
+            android:gravity="center"
+            android:text="1:16"
+            android:textColor="#000000"
+            android:textSize="@dimen/defending_table_text"/>
 
     </TableRow>
 
@@ -75,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:text="Loading Time"
+            android:text="2. Loading Time"
             android:textSize="@dimen/defending_table_text" />
 
         <Button
@@ -103,11 +70,11 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:text="Transport Time"
+            android:text="3. Transport Time"
             android:textSize="@dimen/defending_table_text" />
 
         <Button
-            android:id="@+id/transport_timer"
+            android:id="@+id/transport_timer_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -131,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:text="Community Time"
+            android:text="4. Community Time"
             android:textSize="@dimen/defending_table_text" />
 
         <Button
