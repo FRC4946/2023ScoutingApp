@@ -8,12 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
@@ -35,6 +32,8 @@ public class AutoFragment extends Fragment {
     private TextView m_topConeCount, m_topCubeCount, m_midConeCount, m_midCubeCount, m_botConeCount, m_botCubeCount;
     private CheckBox m_leftCommunitySwitch, m_dockedSwitch, m_engagedSwitch;
     private TextView m_leftCommunityText, m_dockedText, m_engagedText;
+    private CheckBox m_leftStartingSwitch, m_midStartingSwitch, m_rightStartingSwitch;
+    private TextView m_leftStartingText, m_midStartingText, m_rightStartingText;
 
     public AutoFragment() {
         // Required empty public constructor
@@ -87,6 +86,12 @@ public class AutoFragment extends Fragment {
         m_leftCommunityText = view.findViewById(R.id.left_community_text);
         m_dockedText = view.findViewById(R.id.docked_text);
         m_engagedText = view.findViewById(R.id.engaged_text);
+        m_leftStartingSwitch = view.findViewById(R.id.left_starting_switch);
+        m_midStartingSwitch = view.findViewById(R.id.mid_starting_switch);
+        m_rightStartingSwitch = view.findViewById(R.id.right_starting_switch);
+        m_leftStartingText = view.findViewById(R.id.left_starting_text);
+        m_midStartingText = view.findViewById(R.id.mid_starting_text);
+        m_rightStartingText = view.findViewById(R.id.right_starting_text);
 
         updateCounts();
         updateSwitches();
@@ -218,6 +223,45 @@ public class AutoFragment extends Fragment {
             m_engagedSwitch.performClick();
         });
 
+        m_leftStartingSwitch.setOnClickListener(v -> {
+            m_currentForm.startingPosition = "Left";
+            m_midStartingSwitch.setChecked(false);
+            m_rightStartingSwitch.setChecked(false);
+
+            if (!m_leftStartingSwitch.isChecked())
+                m_currentForm.startingPosition = "null";
+        });
+
+        m_midStartingSwitch.setOnClickListener(v -> {
+            m_currentForm.startingPosition = "Mid";
+            m_leftStartingSwitch.setChecked(false);
+            m_rightStartingSwitch.setChecked(false);
+
+            if (!m_midStartingSwitch.isChecked())
+                m_currentForm.startingPosition = "null";
+        });
+
+        m_rightStartingSwitch.setOnClickListener(v -> {
+            m_currentForm.startingPosition = "Right";
+            m_leftStartingSwitch.setChecked(false);
+            m_midStartingSwitch.setChecked(false);
+
+            if (!m_rightStartingSwitch.isChecked())
+                m_currentForm.startingPosition = "null";
+        });
+
+        m_leftStartingText.setOnClickListener(v -> {
+            m_leftStartingSwitch.performClick();
+        });
+
+        m_midStartingText.setOnClickListener(v -> {
+            m_midStartingSwitch.performClick();
+        });
+
+        m_rightStartingText.setOnClickListener(v -> {
+            m_rightStartingSwitch.performClick();
+        });
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -235,5 +279,23 @@ public class AutoFragment extends Fragment {
         m_leftCommunitySwitch.setChecked(m_currentForm.leftCommunity);
         m_dockedSwitch.setChecked(m_currentForm.autoDocked);
         m_engagedSwitch.setChecked(m_currentForm.autoEngaged);
+
+        if (m_currentForm.startingPosition.equals("Left")) {
+            m_leftStartingSwitch.setChecked(true);
+            m_midStartingSwitch.setChecked(false);
+            m_rightStartingSwitch.setChecked(false);
+        } else if (m_currentForm.startingPosition.equals("Mid")) {
+            m_leftStartingSwitch.setChecked(false);
+            m_midStartingSwitch.setChecked(true);
+            m_rightStartingSwitch.setChecked(false);
+        } else if (m_currentForm.startingPosition.equals("Right")) {
+            m_leftStartingSwitch.setChecked(false);
+            m_midStartingSwitch.setChecked(false);
+            m_rightStartingSwitch.setChecked(true);
+        } else {
+            m_leftStartingSwitch.setChecked(false);
+            m_midStartingSwitch.setChecked(false);
+            m_rightStartingSwitch.setChecked(false);
+        }
     }
 }
