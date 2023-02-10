@@ -206,8 +206,8 @@ public class AutoFragment extends Fragment {
 
         m_engagedSwitch.setOnClickListener(v -> {
             m_currentForm.autoEngaged = m_engagedSwitch.isChecked();
-            if (m_engagedSwitch.isChecked()) {
-                m_dockedSwitch.setChecked(true);
+            if (m_engagedSwitch.isChecked() && !m_dockedSwitch.isChecked()) {
+                m_dockedSwitch.performClick();
             }
         });
 
