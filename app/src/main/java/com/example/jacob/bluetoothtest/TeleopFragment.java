@@ -43,7 +43,7 @@ public class TeleopFragment extends Fragment {
     private Button m_offenceToggle;
 
     // Variables for Defence Table
-    private ImageButton m_playButtonA, m_playButtonB, m_playButtonC, m_resetButtonA, m_resetButtonB, m_resetButtonC;
+    private ImageButton m_startPauseButtonA, m_startPauseButtonB, m_startPauseButtonC, m_resetButtonA, m_resetButtonB, m_resetButtonC;
     private TextView m_timerA, m_timerB, m_timerC;
     private EditText m_teamNumberA, m_teamNumberB, m_teamNumberC;
     private TableLayout m_defenceTable, m_offenceTable;
@@ -270,9 +270,9 @@ public class TeleopFragment extends Fragment {
     private void loadDefenceTable(View view) {
         m_titleRow = view.findViewById(R.id.title_row);
         m_defenceTable = view.findViewById(R.id.defence_table);
-        m_playButtonA = view.findViewById(R.id.play_button_a);
-        m_playButtonB = view.findViewById(R.id.play_button_b);
-        m_playButtonC = view.findViewById(R.id.play_button_c);
+        m_startPauseButtonA = view.findViewById(R.id.start_pause_button_a);
+        m_startPauseButtonB = view.findViewById(R.id.start_pause_button_b);
+        m_startPauseButtonC = view.findViewById(R.id.start_pause_button_c);
         m_timerA = view.findViewById(R.id.timer_a);
         m_timerB = view.findViewById(R.id.timer_b);
         m_timerC = view.findViewById(R.id.timer_c);
@@ -286,53 +286,51 @@ public class TeleopFragment extends Fragment {
         // Update the title row color to match the team color
         m_titleRow.setBackgroundColor(m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam));
 
-        m_playButtonA.setOnClickListener(v -> {
-            m_teamNumberA.clearFocus();
-            m_titleRow.requestFocus();
+        m_startPauseButtonA.setOnClickListener(v -> {
             m_runningDefence[0] = !m_runningDefence[0];
             if (m_runningDefence[0]) {
-                m_playButtonA.setImageResource(R.drawable.pause_button);
+                m_startPauseButtonA.setImageResource(R.drawable.pause_button);
             } else {
-                m_playButtonA.setImageResource(R.drawable.play_button);
+                m_startPauseButtonA.setImageResource(R.drawable.play_button);
             }
         });
 
-        m_playButtonB.setOnClickListener(v -> {
+        m_startPauseButtonB.setOnClickListener(v -> {
             m_runningDefence[1] = !m_runningDefence[1];
             if (m_runningDefence[1]) {
-                m_playButtonB.setImageResource(R.drawable.pause_button);
+                m_startPauseButtonB.setImageResource(R.drawable.pause_button);
             } else {
-                m_playButtonB.setImageResource(R.drawable.play_button);
+                m_startPauseButtonB.setImageResource(R.drawable.play_button);
             }
         });
 
-        m_playButtonC.setOnClickListener(v -> {
+        m_startPauseButtonC.setOnClickListener(v -> {
             m_runningDefence[2] = !m_runningDefence[2];
             if (m_runningDefence[2]) {
-                m_playButtonC.setImageResource(R.drawable.pause_button);
+                m_startPauseButtonC.setImageResource(R.drawable.pause_button);
             } else {
-                m_playButtonC.setImageResource(R.drawable.play_button);
+                m_startPauseButtonC.setImageResource(R.drawable.play_button);
             }
         });
 
         m_resetButtonA.setOnClickListener(v -> {
             m_currentForm.opponentADefenceTime = 0;
             if (m_runningDefence[0]) {
-                m_playButtonA.performClick();
+                m_startPauseButtonA.performClick();
             }
         });
 
         m_resetButtonB.setOnClickListener(v -> {
             m_currentForm.opponentBDefenceTime = 0;
             if (m_runningDefence[1]) {
-                m_playButtonB.performClick();
+                m_startPauseButtonB.performClick();
             }
         });
 
         m_resetButtonC.setOnClickListener(v -> {
             m_currentForm.opponentCDefenceTime = 0;
             if (m_runningDefence[2]) {
-                m_playButtonC.performClick();
+                m_startPauseButtonC.performClick();
             }
         });
 

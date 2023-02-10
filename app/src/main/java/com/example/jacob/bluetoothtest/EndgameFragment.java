@@ -26,7 +26,7 @@ public class EndgameFragment extends Fragment {
     private static final String ARG_SCOUTING_FORM = "scoutingForm";
     private ScoutingForm m_currentForm;
     private TextView m_endgameTimer;
-    private ImageButton m_playButton, m_resetButton;
+    private ImageButton m_startPauseButton, m_resetButton;
     private CheckBox m_parkedSwitch, m_dockedSwitch, m_engagedSwitch;
     private TextView m_parkedText, m_dockedText, m_engagedText;
     private ImageView m_chargingStationImage;
@@ -66,7 +66,7 @@ public class EndgameFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_endgame, container, false);
 
         m_endgameTimer = view.findViewById(R.id.endgame_timer);
-        m_playButton = view.findViewById(R.id.play_button);
+        m_startPauseButton = view.findViewById(R.id.start_pause_button);
         m_resetButton = view.findViewById(R.id.reset_button);
         m_parkedSwitch = view.findViewById(R.id.parked_switch);
         m_dockedSwitch = view.findViewById(R.id.docked_switch);
@@ -80,19 +80,19 @@ public class EndgameFragment extends Fragment {
         updateSwitches();
         updateChargingStationImage();
 
-        m_playButton.setOnClickListener(v -> {
+        m_startPauseButton.setOnClickListener(v -> {
             m_running = !m_running;
             if (m_running) {
-                m_playButton.setImageResource(R.drawable.pause_button);
+                m_startPauseButton.setImageResource(R.drawable.pause_button);
             } else {
-                m_playButton.setImageResource(R.drawable.play_button);
+                m_startPauseButton.setImageResource(R.drawable.play_button);
             }
         });
 
         m_resetButton.setOnClickListener(v -> {
             m_currentForm.endgameTime = 0;
             if (m_running) {
-                m_playButton.performClick();
+                m_startPauseButton.performClick();
             }
         });
 
