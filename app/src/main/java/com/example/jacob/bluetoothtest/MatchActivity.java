@@ -71,10 +71,14 @@ public class MatchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        back();
+    }
+
+    public void back() {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Closing Activity")
-                .setMessage("Are you sure you want to close this activity?")
+                .setTitle("Exiting Match")
+                .setMessage("Are you sure you want to finish this match?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                 {
                     @Override

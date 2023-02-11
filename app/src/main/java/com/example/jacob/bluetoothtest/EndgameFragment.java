@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ public class EndgameFragment extends Fragment {
     private CheckBox m_parkedSwitch, m_dockedSwitch, m_engagedSwitch;
     private TextView m_parkedText, m_dockedText, m_engagedText;
     private ImageView m_chargingStationImage;
+    private Button m_exitMatch;
     private boolean m_running; // Whether or not the endgame timer is running
 
     public EndgameFragment() {
@@ -75,6 +77,7 @@ public class EndgameFragment extends Fragment {
         m_dockedText = view.findViewById(R.id.docked_text);
         m_engagedText = view.findViewById(R.id.engaged_text);
         m_chargingStationImage = view.findViewById(R.id.charging_station_image);
+        m_exitMatch = view.findViewById(R.id.exit_match);
 
         runTimer();
         updateSwitches();
@@ -136,6 +139,10 @@ public class EndgameFragment extends Fragment {
 
         m_engagedText.setOnClickListener(v -> {
             m_engagedSwitch.performClick();
+        });
+
+        m_exitMatch.setOnClickListener(v -> {
+            ((MatchActivity) getActivity()).back();
         });
 
         // Inflate the layout for this fragment
