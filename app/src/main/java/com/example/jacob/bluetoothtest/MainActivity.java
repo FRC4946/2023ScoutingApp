@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         m_loadName = intent.getStringExtra(intent.EXTRA_TEXT); //Gets message from previous activity, stores in message string
+        if (intent.hasExtra("SCOUTING_FORM")) {
+            m_currentForm = (ScoutingForm) intent.getSerializableExtra("SCOUTING_FORM");
+        }
 
         m_teamInfo = findViewById(R.id.teamInfo);
 
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 m_currentForm.matchStarted = true;
                 m_currentForm.currentMode = Constants.GameMode.AUTO;
+                System.out.println("PLease: " + m_currentForm.getCompleted());
                 Intent intent = new Intent(MainActivity.this, MatchActivity.class);
                 intent.putExtra("SCOUTING_FORM", m_currentForm);
                 startActivity(intent);
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 BufferedReader reader = new BufferedReader(new FileReader(new File(m_loadName)));
                 String content = reader.readLine(); //Gets the content of the file
                 m_currentForm = ScoutingForm.fromString(content);
+                m_currentForm.setFinalized(true);
             } catch (FileNotFoundException e) {
                 Log.i("A", "File Not Found");
             } catch (IOException e) {

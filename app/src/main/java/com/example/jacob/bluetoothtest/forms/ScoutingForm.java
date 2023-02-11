@@ -70,17 +70,29 @@ public class ScoutingForm implements Serializable {
     }
 
     public void complete() {
-        /*
-        if (defenceTimes.size() > 0) {
-            defenceTimes.get(defenceTimes.size() - 1).tryEnd();
+        double[] timeSums = new double[4];
+
+        // Sum all the cycle times
+        for (int i = 0; i < cycleTimes.size(); i++) {
+            for (int j = 0; j < 4; j++) {
+                timeSums[j] += cycleTimes.get(i)[j];
+            }
         }
-        defenceTime = TimePeriod.millisToSeconds(getTimeListSum(defenceTimes));
-        if (!climbPeriod.ended()) {
-            climbPeriod = new TimePeriod();
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println(timeSums[i]);
         }
-        climbTime = climbPeriod.getDurationSeconds();
-         */
+
+        // Store the average cycle times
+        loadingTime = timeSums[1] / cycleTimes.size();
+        transportTime = (timeSums[0] + timeSums[2]) / 2 / cycleTimes.size();
+        communityTime = timeSums[3] / cycleTimes.size();
+
         m_finalized = true;
+    }
+
+    public void setFinalized(boolean finalized) {
+        m_finalized = finalized;
     }
 
     public boolean getCompleted() {
@@ -154,14 +166,14 @@ public class ScoutingForm implements Serializable {
         ret.park = "True".equals(arr[21]);
         ret.endgameTime = Double.parseDouble(arr[22]);
         ret.opponentA = Integer.parseInt(arr[23]);
-        ret.opponentADefenceTime = Integer.parseInt(arr[24]);
+        ret.opponentADefenceTime = Double.parseDouble(arr[24]);
         ret.opponentB = Integer.parseInt(arr[25]);
-        ret.opponentBDefenceTime = Integer.parseInt(arr[26]);
+        ret.opponentBDefenceTime = Double.parseDouble(arr[26]);
         ret.opponentC = Integer.parseInt(arr[27]);
-        ret.opponentCDefenceTime = Integer.parseInt(arr[28]);
-        ret.loadingTime = Integer.parseInt(arr[29]);
-        ret.transportTime = Integer.parseInt(arr[30]);
-        ret.communityTime = Integer.parseInt(arr[31]);
+        ret.opponentCDefenceTime = Double.parseDouble(arr[28]);
+        ret.loadingTime = Double.parseDouble(arr[29]);
+        ret.transportTime = Double.parseDouble(arr[30]);
+        ret.communityTime = Double.parseDouble(arr[31]);
         ret.startingPosition = arr[32];
         ret.matchStarted = true;
         ret.matchOver = true;

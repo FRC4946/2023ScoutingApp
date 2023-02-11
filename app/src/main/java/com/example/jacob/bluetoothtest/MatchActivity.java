@@ -1,6 +1,7 @@
 package com.example.jacob.bluetoothtest;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -78,7 +79,10 @@ public class MatchActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        m_currentForm.complete();
+                        Intent intent = new Intent(MatchActivity.this, MainActivity.class);
+                        intent.putExtra("SCOUTING_FORM", m_currentForm);
+                        startActivity(intent);
                     }
 
                 })

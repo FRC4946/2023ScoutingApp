@@ -235,6 +235,15 @@ public class TeleopFragment extends Fragment {
         });
 
         m_offenceToggle.setOnClickListener(v -> {
+            System.out.println(m_currentForm.getCompleted());
+
+            // Changing to offence after the game is completed will probably cause a bug
+            // So instead of fixing the bug, I just don't let the user do it
+            if (m_currentForm.getCompleted()) {
+                Utilities.showToast(getContext(),"Game Completed, cannot change to Offence",Toast.LENGTH_SHORT);
+                return;
+            }
+
             m_offence = !m_offence;
 
             if (m_offence) {
@@ -439,13 +448,7 @@ public class TeleopFragment extends Fragment {
             // Check if the buttons were pressed in the proper order
             if (m_cyclePhase == -1 || m_cyclePhase == 3) {
                 // Check if managed to complete one full cycle
-                if (m_cyclePhase == 3) {
-                    // Create a new cycle in cycle times
-                    m_currentForm.currentCycle++;
-                    m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
-                    // Congratulate the user
-                    Utilities.showToast(getContext(),"Cycle Completed!",Toast.LENGTH_SHORT);
-                }
+                if (m_cyclePhase == 3) completeCycle();
 
                 // Increment the cycle
                 m_cyclePhase = 0;
@@ -506,6 +509,10 @@ public class TeleopFragment extends Fragment {
                 // Highlight the running timer, and deselect the stopped timer
                 m_transportTimer2.getBackground().clearColorFilter();
                 m_communityTimer.getBackground().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#777777"), PorterDuff.Mode.MULTIPLY));
+            } else if (m_cyclePhase == 3) {
+                // Can also click the button again to complete the cycle
+                completeCycle();
+                m_cyclePhase = -1;
             } else {
                 // If the buttons were pressed out of order, reset the cycle
                 resetCycle();
@@ -525,6 +532,24 @@ public class TeleopFragment extends Fragment {
         m_loadingTimer.getBackground().clearColorFilter();
         m_transportTimer2.getBackground().clearColorFilter();
         m_communityTimer.getBackground().clearColorFilter();
+    }
+
+    /**
+     * Used by offence table to complete the cycle, reset it, and congratulate the user
+     */
+    private void completeCycle() {
+        // Pause all offence timers
+        m_runningOffence = new boolean[] {false, false, false, false};
+        // Create a new cycle in cycle times
+        m_currentForm.currentCycle++;
+        m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+        // Clear all the highlights
+        m_transportTimer1.getBackground().clearColorFilter();
+        m_loadingTimer.getBackground().clearColorFilter();
+        m_transportTimer2.getBackground().clearColorFilter();
+        m_communityTimer.getBackground().clearColorFilter();
+        // Congratulate the user
+        Utilities.showToast(getContext(),"Cycle Completed!",Toast.LENGTH_SHORT);
     }
 
 
