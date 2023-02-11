@@ -235,8 +235,6 @@ public class TeleopFragment extends Fragment {
         });
 
         m_offenceToggle.setOnClickListener(v -> {
-            System.out.println(m_currentForm.getCompleted());
-
             // Changing to offence after the game is completed will probably cause a bug
             // So instead of fixing the bug, I just don't let the user do it
             if (m_currentForm.getCompleted()) {

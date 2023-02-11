@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 m_currentForm.matchStarted = true;
                 m_currentForm.currentMode = Constants.GameMode.AUTO;
-                System.out.println("PLease: " + m_currentForm.getCompleted());
                 Intent intent = new Intent(MainActivity.this, MatchActivity.class);
                 intent.putExtra("SCOUTING_FORM", m_currentForm);
                 startActivity(intent);
