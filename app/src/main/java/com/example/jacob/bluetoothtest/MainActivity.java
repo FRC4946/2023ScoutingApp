@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,13 +21,20 @@ import android.widget.TextView;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity {
     //https://coolors.co/e73c37-eef4d4-ffd6e0-657ed4-262626
@@ -196,6 +204,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Make sure team number is updated
+                m_currentForm.matchNumber = Integer.parseInt(number.getText().toString());
+                // Try and get the opponent robots from JSON file
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Constants.READ_SCHEDULE_REQUEST);
                 dialogInterface.cancel();
             }
         });
@@ -250,6 +263,64 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 Log.i("A", "Write permission was NOT granted.");
+            }
+
+        } else if (requestCode == Constants.READ_SCHEDULE_REQUEST) {
+
+            Log.i("A", "Received response for read permission request.");
+
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //When read permission is granted
+
+                Log.i("A", "Read permission has now been granted.");
+
+                try {
+
+                    // Read the JSON File in the Documents Folder
+                    // *Technically a txt file
+                    BufferedReader reader = new BufferedReader(new FileReader(Environment.getExternalStorageDirectory().getPath() + "/Documents/schedule.txt"));
+                    JSONArray schedule = new JSONObject(reader.readLine()).getJSONArray("Schedule");
+
+                    for (int i=0; i < schedule.length(); i++)
+                    {
+                        try {
+                            JSONObject match = schedule.getJSONObject(i);
+
+                            // Pull match number
+                            int matchNumber = match.getInt("matchNumber");
+                            if (matchNumber == m_currentForm.matchNumber) {
+                                JSONArray teams = match.getJSONArray("teams");
+
+                                if (m_currentForm.team == Constants.Team.RED) {
+                                    m_currentForm.opponentA = teams.getJSONObject(3).getInt("teamNumber");
+                                    m_currentForm.opponentB = teams.getJSONObject(4).getInt("teamNumber");
+                                    m_currentForm.opponentC = teams.getJSONObject(5).getInt("teamNumber");
+                                } else {
+                                    m_currentForm.opponentA = teams.getJSONObject(0).getInt("teamNumber");
+                                    m_currentForm.opponentB = teams.getJSONObject(1).getInt("teamNumber");
+                                    m_currentForm.opponentC = teams.getJSONObject(2).getInt("teamNumber");
+                                }
+
+                                break;
+                            }
+                        } catch (JSONException e) {
+                            // Oops
+                            Log.i("A", e.toString());
+                        }
+                    }
+
+
+                    reader.close();
+
+                } catch (IOException e) {
+                    //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
+                    Log.i("A", "File read failed");
+                } catch (JSONException e) {
+                    Log.i("A", "JSON Parse failed");
+                }
+
+            } else {
+                Log.i("A", "Read permission was NOT granted.");
             }
 
         } else {
