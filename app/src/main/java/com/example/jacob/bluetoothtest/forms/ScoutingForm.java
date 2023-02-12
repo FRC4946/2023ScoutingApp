@@ -88,6 +88,14 @@ public class ScoutingForm implements Serializable {
         transportTime = (timeSums[0] + timeSums[2]) / 2 / cycleTimes.size();
         communityTime = timeSums[3] / cycleTimes.size();
 
+        // Double check for NaN
+        if (Double.isNaN(loadingTime))
+            loadingTime = 0;
+        if (Double.isNaN(transportTime))
+            transportTime = 0;
+        if (Double.isNaN(communityTime))
+            communityTime = 0;
+
         m_finalized = true;
     }
 

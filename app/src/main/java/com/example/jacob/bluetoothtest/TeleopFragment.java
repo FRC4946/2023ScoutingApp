@@ -50,6 +50,7 @@ public class TeleopFragment extends Fragment {
     private TextView m_bottomTitle;
     private Button m_loadingTimer, m_transportTimer1, m_transportTimer2, m_communityTimer;
     private int m_cyclePhase = -1; // 0: transport, 1: loading, 2: transport, 3: community
+    private double[] m_cycleTimes = new double[4]; // Store the cycles times before uploading them to the scouting form
 
     // Whether the defence timers are running
     // Index 0: Team A Defence Timer
@@ -106,10 +107,6 @@ public class TeleopFragment extends Fragment {
         loadDefenceTable(view);
         loadOffenceTable(view);
         updateCounts();
-
-        // Create the first cycle if there is none
-        if (m_currentForm.cycleTimes.size() == 0)
-            m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
 
         // Inflate the layout for this fragment
         return view;
@@ -525,7 +522,7 @@ public class TeleopFragment extends Fragment {
         Utilities.showToast(getContext(),"Actions Out of Order. Resetting",Toast.LENGTH_SHORT);
         m_cyclePhase = -1;
         m_runningOffence = new boolean[]{false, false, false, false};
-        m_currentForm.cycleTimes.set(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+        m_cycleTimes = new double[4];
         m_transportTimer1.getBackground().clearColorFilter();
         m_loadingTimer.getBackground().clearColorFilter();
         m_transportTimer2.getBackground().clearColorFilter();
@@ -538,9 +535,10 @@ public class TeleopFragment extends Fragment {
     private void completeCycle() {
         // Pause all offence timers
         m_runningOffence = new boolean[] {false, false, false, false};
-        // Create a new cycle in cycle times
+        // Add cycle to Scouting Form
+        m_currentForm.cycleTimes.add(m_currentForm.currentCycle, m_cycleTimes);
         m_currentForm.currentCycle++;
-        m_currentForm.cycleTimes.add(m_currentForm.currentCycle, new double[]{0, 0, 0, 0});
+        m_cycleTimes = new double[4];
         // Clear all the highlights
         m_transportTimer1.getBackground().clearColorFilter();
         m_loadingTimer.getBackground().clearColorFilter();
@@ -597,19 +595,19 @@ public class TeleopFragment extends Fragment {
                 // OFFENCE TIMERS:
                 // If running is true, increment the seconds variable.
                 if (m_runningOffence[0])
-                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0]+=0.1;
+                    m_cycleTimes[0] += 0.1;
                 if (m_runningOffence[1])
-                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1]+=0.1;
+                    m_cycleTimes[1]+=0.1;
                 if (m_runningOffence[2])
-                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]+=0.1;
+                    m_cycleTimes[2]+=0.1;
                 if (m_runningOffence[3])
-                    m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3]+=0.1;
+                    m_cycleTimes[3]+=0.1;
 
                 // Format the seconds minutes, and seconds.
-                String transportTimer1Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[0]) % 60);
-                String loadingTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[1] % 60));
-                String transportTimer2Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[2]) % 60);
-                String communityTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3] / 60), (int) Math.floor(m_currentForm.cycleTimes.get(m_currentForm.currentCycle)[3]) % 60);
+                String transportTimer1Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_cycleTimes[0] / 60), (int) Math.floor(m_cycleTimes[0]) % 60);
+                String loadingTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_cycleTimes[1] / 60), (int) Math.floor(m_cycleTimes[1] % 60));
+                String transportTimer2Text = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_cycleTimes[2] / 60), (int) Math.floor(m_cycleTimes[2]) % 60);
+                String communityTimerText = String.format(Locale.getDefault(), "%d:%02d", (int) Math.floor(m_cycleTimes[3] / 60), (int) Math.floor(m_cycleTimes[3]) % 60);
 
                 // Set the text view text.
                 m_transportTimer1.setText(transportTimer1Text);
