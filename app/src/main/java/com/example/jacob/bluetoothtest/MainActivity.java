@@ -79,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
         m_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ScoutingForm form = new ScoutingForm();
-                form.team = m_currentForm.team;
-                form.teamNumber = m_currentForm.teamNumber;
-                form.scoutName = m_currentForm.scoutName;
-                form.matchNumber = m_currentForm.matchNumber + 1;
-                m_currentForm = form;
                 showSetupAlert();
             }
         });
@@ -144,6 +138,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void showSetupAlert() {
+        ScoutingForm form = new ScoutingForm();
+        form.team = m_currentForm.team;
+        form.teamNumber = m_currentForm.teamNumber;
+        form.scoutName = m_currentForm.scoutName;
+        form.matchNumber = m_currentForm.matchNumber + 1;
+        m_currentForm = form;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setCancelable(true);
@@ -204,8 +205,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Make sure team number is updated
-                m_currentForm.matchNumber = Integer.parseInt(number.getText().toString());
                 // Try and get the opponent robots from JSON file
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         Constants.READ_SCHEDULE_REQUEST);

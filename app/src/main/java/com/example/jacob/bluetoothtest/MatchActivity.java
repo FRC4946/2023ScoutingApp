@@ -148,6 +148,6 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     private void updateActionBar() {
-        m_actionBar.setTitle("Team " + m_currentForm.teamNumber + " - " + m_currentForm.currentMode.toString());
+        m_actionBar.setTitle("Team " + m_currentForm.teamNumber + " - " + m_currentForm.currentMode.toString() + "  (Match #" + m_currentForm.matchNumber + ")");
     }
 }
