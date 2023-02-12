@@ -123,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("A", "Error Reading File");
             }
             updateTeamInfo();
-        } else {
-            showSetupAlert();
         }
     }
 
