@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel>
-      <module name="2023ScoutingApp.app" target="19" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="19" />
   </component>
 </project>

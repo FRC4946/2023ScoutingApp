@@ -141,7 +141,7 @@ public class ScoutingForm implements Serializable {
                 + loadingTime + ","
                 + transportTime + ","
                 + communityTime + ","
-                + startingPosition + ",";
+                + startingPosition;
     }
 
     public static ScoutingForm fromString(String s) {
