@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:text="1. Transport Time"
+            android:text="1. Moving to Loading"
             android:textSize="@dimen/defending_table_text" />
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_weight="1"
-            android:text="3. Transport Time"
+            android:text="3. Moving to Community"
             android:textSize="@dimen/defending_table_text" />
 
         <Button

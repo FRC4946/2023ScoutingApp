@@ -64,7 +64,7 @@ public class TeleopFragment extends Fragment {
     // Index 2: Transport Timer 2
     // Index 3: Community Timer
     private boolean[] m_runningOffence = {false, false, false, false};
-    private boolean m_offence = false; // Whether or not the robot is attacking or defending
+    private boolean m_offence = true; // Whether or not the robot is attacking or defending
 
     public TeleopFragment() {
         // Required empty public constructor
@@ -232,13 +232,6 @@ public class TeleopFragment extends Fragment {
         });
 
         m_offenceToggle.setOnClickListener(v -> {
-            // Changing to offence after the game is completed will probably cause a bug
-            // So instead of fixing the bug, I just don't let the user do it
-            if (m_currentForm.getCompleted()) {
-                Utilities.showToast(getContext(),"Game Completed, cannot change to Offence",Toast.LENGTH_SHORT);
-                return;
-            }
-
             m_offence = !m_offence;
 
             if (m_offence) {

@@ -70,6 +70,9 @@ public class ScoutingForm implements Serializable {
     }
 
     public void complete() {
+        // If it's finalized already do not recalculate the cycle times
+        if (m_finalized) return;
+
         double[] timeSums = new double[4];
 
         // Sum all the cycle times

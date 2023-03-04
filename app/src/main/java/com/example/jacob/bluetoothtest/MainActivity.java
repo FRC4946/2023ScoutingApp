@@ -248,7 +248,9 @@ public class MainActivity extends AppCompatActivity {
                     writer.write(m_currentForm.toString());
                     writer.close();
 
+
                     Log.i("A", "Finished writing to " + csv.getAbsolutePath() + "");
+                    Utilities.showToast(this, "SAVED!", 2);
 
                     //IO crap for testing
                     //BufferedReader reader = new BufferedReader(new FileReader(csv));

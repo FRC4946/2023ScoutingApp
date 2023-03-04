@@ -30,7 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Scoring Grid"
+                    android:text="Grid"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="12dp"
                         android:gravity="right"
-                        android:text="Top Row:"
+                        android:text="Top Row"
                         android:textSize="25sp" />
 
                     <LinearLayout
@@ -157,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="12dp"
                         android:gravity="right"
-                        android:text="Middle Row:"
+                        android:text="Middle Row"
                         android:textSize="25sp" />
 
                     <LinearLayout
@@ -249,7 +249,7 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="12dp"
-                        android:text="Bottom Row:"
+                        android:text="Bottom Row"
                         android:textSize="25sp" />
 
                     <LinearLayout
@@ -346,7 +346,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="Defending"
+                    android:text="Attacking"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -357,18 +357,18 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="Change to Offence"/>
+                    android:text="Change to Defence"/>
 
             </RelativeLayout>
 
             <include
                 android:id="@+id/defence_table"
-                android:visibility="visible"
+                android:visibility="gone"
                 layout="@layout/defence_table" />
 
             <include
                 android:id="@+id/offence_table"
-                android:visibility="gone"
+                android:visibility="visible"
                 layout="@layout/offence_table" />
 
         </LinearLayout>
