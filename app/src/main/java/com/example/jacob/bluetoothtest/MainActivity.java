@@ -2,8 +2,11 @@ package com.example.jacob.bluetoothtest;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Environment;
@@ -14,9 +17,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.jacob.bluetoothtest.forms.ScoutingForm;
@@ -28,13 +34,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity {
     //https://coolors.co/e73c37-eef4d4-ffd6e0-657ed4-262626
@@ -42,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private Button m_new, m_load, m_save, m_send, m_matchToggle;
     private String m_loadName;
     private TextView m_teamInfo;
+    private String m_station;
+
+    private EditText m_teamNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         m_load = findViewById(R.id.load);
         m_send = findViewById(R.id.send);
 
-        updateTeamInfo();
+        updateUI();
 
         m_matchToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.i("A", "Error Reading File");
             }
-            updateTeamInfo();
+            updateUI();
         }
     }
 
-    void updateTeamInfo() {
+    void updateUI() {
         m_teamInfo.setText((m_currentForm.scoutName.length() > Constants.SCOUT_NAME_MAX_UI_LENGTH ? m_currentForm.scoutName.substring(0, Constants.SCOUT_NAME_MAX_UI_LENGTH - 3) + "..." : m_currentForm.scoutName) + " Scouting " + m_currentForm.team + " - " + m_currentForm.teamNumber + " For Match " + m_currentForm.matchNumber);
         m_teamInfo.setTextColor((m_currentForm.team == Constants.Team.RED ? getResources().getColor(R.color.redTeam) : getResources().getColor(R.color.blueTeam)));
         m_load.setBackground((m_currentForm.team == Constants.Team.RED) ? getResources().getDrawable(R.drawable.redbutton) : getResources().getDrawable(R.drawable.bluebutton));
@@ -158,11 +164,43 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText name = layout.findViewById(R.id.scoutName);
         final EditText number = layout.findViewById(R.id.matchNumber);
-        final EditText teamNumber = layout.findViewById(R.id.teamNumber);
+        m_teamNumber = layout.findViewById(R.id.teamNumber);
+
+        final Spinner teamPicker = layout.findViewById(R.id.teamPicker);
+
+        String[] teams = {"Red 1", "Red 2", "Red 3", "Blue 1", "Blue 2", "Blue 3"};
+
+        ArrayAdapter aa = new ArrayAdapter(this, R.layout.spinner_template, teams);
+
+        aa.setDropDownViewResource(R.layout.spinner_dropdown_template);
+        teamPicker.setAdapter(aa);
 
         name.setText(m_currentForm.scoutName);
         number.setText("" + m_currentForm.matchNumber);
-        teamNumber.setText("" + m_currentForm.teamNumber);
+        m_teamNumber.setText("" + m_currentForm.teamNumber);
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        m_station = sharedPref.getString("station", "Red 1");
+        switch (m_station) {
+            case "Red 1":
+                teamPicker.setSelection(0);
+                break;
+            case "Red 2":
+                teamPicker.setSelection(1);
+                break;
+            case "Red 3":
+                teamPicker.setSelection(2);
+                break;
+            case "Blue 1":
+                teamPicker.setSelection(3);
+                break;
+            case "Blue 2":
+                teamPicker.setSelection(4);
+                break;
+            case "Blue 3":
+                teamPicker.setSelection(5);
+                break;
+        }
 
         if (m_currentForm.team == Constants.Team.RED) {
             red.setEnabled(false);
@@ -203,10 +241,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+
                 // Try and get the opponent robots from JSON file
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         Constants.READ_SCHEDULE_REQUEST);
-                dialogInterface.cancel();
             }
         });
 
@@ -215,9 +254,31 @@ public class MainActivity extends AppCompatActivity {
             public void onCancel(DialogInterface dialogInterface) {
                 m_currentForm.scoutName = name.getText().toString();
                 m_currentForm.matchNumber = Integer.parseInt(number.getText().toString());
-                m_currentForm.teamNumber = Integer.parseInt(teamNumber.getText().toString());
-                updateTeamInfo();
+                m_currentForm.teamNumber = Integer.parseInt(m_teamNumber.getText().toString());
+                updateUI();
             }
+        });
+
+        teamPicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Log.i("Debug", "On Item Selected");
+                m_station = teamPicker.getSelectedItem().toString();
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("station", m_station);
+                editor.apply();
+
+                // Try to get the team number from the JSON file
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Constants.READ_TEAM_NUMBER_REQUEST);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
         });
 
         AlertDialog dialog = builder.create();
@@ -322,10 +383,78 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("A", "Read permission was NOT granted.");
             }
 
+        } else if (requestCode == Constants.READ_TEAM_NUMBER_REQUEST) {
+
+            Log.i("A", "Received response for read permission request.");
+
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //When read permission is granted
+
+                Log.i("A", "Read permission has now been granted.");
+
+                try {
+
+                    // Read the JSON File in the Documents Folder
+                    // *Technically a txt file
+                    BufferedReader reader = new BufferedReader(new FileReader(Environment.getExternalStorageDirectory().getPath() + "/Documents/schedule.txt"));
+                    JSONArray schedule = new JSONObject(reader.readLine()).getJSONArray("Schedule");
+
+                    for (int i=0; i < schedule.length(); i++)
+                    {
+                        try {
+                            JSONObject match = schedule.getJSONObject(i);
+
+                            // Pull match number
+                            int matchNumber = match.getInt("matchNumber");
+                            if (matchNumber == m_currentForm.matchNumber) {
+                                JSONArray teams = match.getJSONArray("teams");
+
+                                switch(m_station) {
+                                    case "Red 1":
+                                        m_currentForm.teamNumber = teams.getJSONObject(0).getInt("teamNumber");
+                                        break;
+                                    case "Red 2":
+                                        m_currentForm.teamNumber = teams.getJSONObject(1).getInt("teamNumber");
+                                        break;
+                                    case "Red 3":
+                                        m_currentForm.teamNumber = teams.getJSONObject(2).getInt("teamNumber");
+                                        break;
+                                    case "Blue 1":
+                                        m_currentForm.teamNumber = teams.getJSONObject(3).getInt("teamNumber");
+                                        break;
+                                    case "Blue 2":
+                                        m_currentForm.teamNumber = teams.getJSONObject(4).getInt("teamNumber");
+                                        break;
+                                    case "Blue 3":
+                                        m_currentForm.teamNumber = teams.getJSONObject(5).getInt("teamNumber");
+                                        break;
+                                }
+
+                                m_teamNumber.setText("" + m_currentForm.teamNumber);
+                            }
+                        } catch (JSONException e) {
+                            // Oops
+                            Log.i("A", e.toString());
+                        }
+                    }
+
+
+                    reader.close();
+
+                } catch (IOException e) {
+                    //IO didn't work, honestly this shouldn't happen, if it does its probably a device or permission error
+                    Log.i("A", "File read failed");
+                } catch (JSONException e) {
+                    Log.i("A", "JSON Parse failed");
+                }
+
+            } else {
+                Log.i("A", "Read permission was NOT granted.");
+            }
+
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
     }
 }
 

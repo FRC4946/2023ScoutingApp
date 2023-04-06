@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:textSize="20sp"
         android:hint="Scout Name"
         android:inputType="textPersonName" />
 
@@ -26,16 +27,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:textSize="20sp"
         android:hint="Match Number"
         android:inputType="number" />
 
-    <EditText
-        android:id="@+id/teamNumber"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/team_number"
-        android:inputType="number" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/teamNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:textSize="20sp"
+            android:hint="@string/team_number"
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/teamPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

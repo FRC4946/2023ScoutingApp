@@ -346,29 +346,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="Attacking"
+                    android:text="Defence"
                     android:textSize="30sp"
                     android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/offence_toggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="Change to Defence"/>
 
             </RelativeLayout>
 
             <include
                 android:id="@+id/defence_table"
-                android:visibility="gone"
+                android:visibility="visible"
                 layout="@layout/defence_table" />
 
             <include
                 android:id="@+id/offence_table"
-                android:visibility="visible"
+                android:visibility="gone"
                 layout="@layout/offence_table" />
 
         </LinearLayout>

@@ -10,6 +10,7 @@ public class Constants {
     public static final int WRITE_LOG_REQUEST = 1;
     public static final int DELETE_LOG_REQUEST = 2;
     public static final int READ_SCHEDULE_REQUEST = 3;
+    public static final int READ_TEAM_NUMBER_REQUEST = 4;
 
     public enum GameMode {
         AUTO, TELEOP, ENDGAME
